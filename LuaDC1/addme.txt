@@ -1,0 +1,47 @@
+
+main <0:=(none)> (44 instructions/176 bytes at 008830B8)
+0 params, 11 stacks, 0 locals, 13 strings, 0 numbers, 0 functions, 0 lines
+     1	[-]	CREATETABLE	5
+     2	[-]	PUSHSTRING 	0	; "mapluafile"
+     3	[-]	PUSHSTRING 	1	; "ety1"
+     4	[-]	PUSHSTRING 	2	; "showstr"
+     5	[-]	PUSHSTRING 	3	; "EDDIE'S TYNNA v1.0"
+     6	[-]	PUSHSTRING 	4	; "side_a"
+     7	[-]	PUSHINT    	1
+     8	[-]	PUSHSTRING 	5	; "side_c"
+     9	[-]	PUSHINT    	1
+    10	[-]	PUSHSTRING 	6	; "dnldable"
+    11	[-]	PUSHINT    	1
+    12	[-]	SETMAP     	5
+    13	[-]	GETGLOBAL  	7	; getn
+    14	[-]	GETGLOBAL  	8	; sp_missionselect_listbox_contents
+    15	[-]	CALL       	1 1
+    16	[-]	GETGLOBAL  	8	; sp_missionselect_listbox_contents
+    17	[-]	GETLOCAL   	1
+    18	[-]	ADDI       	1
+    19	[-]	GETLOCAL   	0
+    20	[-]	SETTABLE   	3 3
+    21	[-]	GETGLOBAL  	7	; getn
+    22	[-]	GETGLOBAL  	9	; mp_missionselect_listbox_contents
+    23	[-]	CALL       	2 1
+    24	[-]	SETLOCAL   	1
+    25	[-]	GETGLOBAL  	9	; mp_missionselect_listbox_contents
+    26	[-]	GETLOCAL   	1
+    27	[-]	ADDI       	1
+    28	[-]	GETLOCAL   	0
+    29	[-]	SETTABLE   	3 3
+    30	[-]	GETGLOBAL  	10	; AddDownloadableContent
+    31	[-]	PUSHSTRING 	1	; "ety1"
+    32	[-]	PUSHSTRING 	11	; "ety1c"
+    33	[-]	PUSHINT    	4
+    34	[-]	CALL       	2 0
+    35	[-]	GETGLOBAL  	10	; AddDownloadableContent
+    36	[-]	PUSHSTRING 	1	; "ety1"
+    37	[-]	PUSHSTRING 	12	; "ety1a"
+    38	[-]	PUSHINT    	4
+    39	[-]	CALL       	2 0
+    40	[-]	PUSHNIL    	1
+    41	[-]	SETLOCAL   	0
+    42	[-]	PUSHNIL    	1
+    43	[-]	SETLOCAL   	1
+    44	[-]	END        	
