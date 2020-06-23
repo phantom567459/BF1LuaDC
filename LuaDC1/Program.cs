@@ -7,7 +7,7 @@ namespace LuaDC1
 {
     class Program
     {
-        public static readonly string[] vals = { "CREATETABLE","PUSHINT","PUSHNUM","PUSHNEGNUM","PUSHSTRING","SETMAP","GETGLOBAL","SETGLOBAL","CALL","ADDI","GETLOCAL",
+        public static readonly string[] vals = { "function","CREATETABLE","PUSHINT","PUSHNUM","PUSHNEGNUM","PUSHSTRING","SETMAP","GETGLOBAL","SETGLOBAL","CALL","ADDI","GETLOCAL",
          "SETTABLE","SETLOCAL","PUSHNIL","CLOSURE","END",};
         static void Main(string[] args)
         {
@@ -15,7 +15,7 @@ namespace LuaDC1
             
 
             Console.WriteLine("Hello World!");
-            string filename = "bes2a.txt";
+            string filename = "ifs_pausemenu.txt";
             string newname = String.Concat(filename.Substring(0, filename.Length - 4),".lua");
             string[] lines = System.IO.File.ReadAllLines(filename); //each individual line
 
@@ -32,6 +32,9 @@ namespace LuaDC1
             int globalcalledlast = 0;
             int globalastable = 0;
             int withincall = 0;
+            int functioncounter = -1;
+            bool storefunctionname = false;
+            bool insidefunction = false;
 
             string line;
             List<string> localvariablelist = new List<string>();
@@ -60,6 +63,30 @@ namespace LuaDC1
                         
                         switch (parser[0])
                         {
+                            case "function":
+                                insidefunction = true;
+                                luafile = String.Concat(luafile,"function ",functionnamelist[0],"(");
+                                //do params
+                                int paramnum = int.Parse(lines[i + 1].Substring(0, 1));
+                                //Console.WriteLine(String.Concat("LOOK AT ME # OF PARAMS = ",paramnum));
+                                for (int p = 1; p <= paramnum;p++)
+                                {
+                                    if (p == 1) 
+                                    {
+                                        luafile = String.Concat(luafile, "var", localcounter);
+                                        localvariablelist.Add(String.Concat("var", localcounter));
+                                        localcounter += 1; 
+                                    }
+                                    else
+                                    {
+                                        luafile = String.Concat(luafile, ",var", localcounter);
+                                        localvariablelist.Add(String.Concat("var", localcounter));
+                                        localcounter += 1;
+                                    }
+                                }
+                                //something something parameter count, drop in the local var list and have a field day.
+                                luafile = String.Concat(luafile, ")");
+                                break;
                             case "CREATETABLE":
                                 luafile = String.Concat(luafile,System.Environment.NewLine,"local table", tblCounter, " = { ");
                                 Console.WriteLine(String.Concat("local table",tblCounter," = { "));
@@ -153,10 +180,10 @@ namespace LuaDC1
                                         break;
                                     }
                                 }
-                                else if (globalcalledlast == 1)
+                                else if (tblDECL == 0 & globalcalledlast == 1)
                                 {
-                                    luafile = String.Concat(luafile, parser[3]);
-                                    Console.WriteLine(parser[3]);
+                                    luafile = String.Concat(luafile, parser[3], ",");
+                                    Console.WriteLine(parser[3], ",");
                                     break;
                                 }
                                 else
@@ -168,7 +195,38 @@ namespace LuaDC1
                                     break;
                                 }
                             case "PUSHNEGNUM":
-                                break;
+                                if (tblDECL == 1)
+                                {
+                                    if (tblVarStatic == 1)
+                                    {
+                                        luafile = String.Concat(luafile, "-", parser[3], " = ");
+                                        Console.WriteLine(String.Concat("-",parser[3], " = "));
+                                        tblVarStatic = 0;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        luafile = String.Concat(luafile,"-", parser[3], ", ");
+                                        Console.WriteLine(String.Concat("-",parser[3], ", "));
+                                        tblVarStatic = 1;
+                                        break;
+                                    }
+                                }
+                                else if (tblDECL == 0 & globalcalledlast == 1)
+                                {
+                                    luafile = String.Concat(luafile, "-", parser[3],",");
+                                    Console.WriteLine(parser[3],",");
+                                    break;
+                                }
+                                else
+                                {
+                                    luafile = String.Concat(luafile, System.Environment.NewLine, "local var", localcounter, "= -", parser[3]);
+                                    localvariablelist.Add(String.Concat("var", localcounter));
+                                    localcounter += 1;
+                                    Console.WriteLine(String.Concat("local var", localcounter, "= -", parser[3]));
+                                    break;
+                                }
+
                             case "SETMAP":
                                 luafile = String.Concat(luafile,"}", System.Environment.NewLine);
                                 Console.WriteLine("}");
@@ -275,6 +333,14 @@ namespace LuaDC1
                                 }
                                 break;
                             case "SETGLOBAL":
+                                if (storefunctionname == true)
+                                {
+                                    functionnamelist.Add(parser[3]);
+                                    storefunctionname = false;
+                                    functioncounter += 1;
+                                    break;
+                                }
+                                
                                 break;
                             case "CALL":
                                 luafile = String.Concat(luafile.TrimEnd(','),")");
@@ -327,6 +393,7 @@ namespace LuaDC1
                                 }
                                 break;
                             case "CLOSURE":
+                                storefunctionname = true;
                                 break;
                             case "PUSHNIL":
                                 //Console.WriteLine("nil");
@@ -380,6 +447,11 @@ namespace LuaDC1
                                 withincall = 0;
                                 localvariablelist.Clear();
                                 //determine write order
+                                if (insidefunction == true)
+                                {
+                                    luafile = String.Concat(luafile, System.Environment.NewLine, "end");
+                                    insidefunction = false;
+                                }
                                 break;
 
                         }
@@ -387,6 +459,8 @@ namespace LuaDC1
                     }
                 }
             }
+            //lol @lua for needing an escape character
+            luafile = luafile.Replace("\\","\\\\");
             System.IO.File.WriteAllText(newname, luafile);
         }
     }
