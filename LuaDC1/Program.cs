@@ -7,15 +7,16 @@ namespace LuaDC1
 {
     class Program
     {
-        public static readonly string[] vals = { "function","CREATETABLE","PUSHINT","PUSHNUM","PUSHNEGNUM","PUSHSTRING","SETMAP","GETGLOBAL","SETGLOBAL","CALL","ADDI","GETLOCAL",
-         "SETTABLE","SETLOCAL","PUSHNIL","CLOSURE","END",};
+        public static readonly string[] vals = { "function","CREATETABLE","PUSHINT","PUSHNUM","PUSHNEGNUM","PUSHSTRING","SETMAP","GETGLOBAL","GETINDEXED","JMP",
+        "JMPF","JMPT","JMPE","JMPNE","FORLOOP","FORPREP","SETGLOBAL","CALL","ADDI","SUB","GETLOCAL","GETDOTTED","RETURN","POP",
+         "SETTABLE","SETLOCAL","SETLIST","PUSHNIL","CLOSURE","END",};
         static void Main(string[] args)
         {
 
-            
+            //TODO: SETLIST
 
             Console.WriteLine("Hello World!");
-            string filename = "ifs_pausemenu.txt";
+            string filename = "missionlist.txt";
             string newname = String.Concat(filename.Substring(0, filename.Length - 4),".lua");
             string[] lines = System.IO.File.ReadAllLines(filename); //each individual line
 
