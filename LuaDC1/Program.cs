@@ -34,18 +34,16 @@ namespace LuaDC1
 
             int tblCounter = 0;
             int localCounter = 0;
-            int globalCounter = 0;
             int globalcalledlast = 0;
             int globalastable = 0;
             int withincall = 0;
-            //int insidetable = 0;
+            int setListSkip = 0;
             int functioncounter = -1;
             int opentables = 0;
-            int internalelementcounter = 0;
-            int elementCounter = 0;
             bool storefunctionname = false;
             bool insidefunction = false;
-            bool storeglobaltable = true;
+            bool storeglobaltable = false;
+            bool setListCalled = false;
 
             string line;
 
@@ -56,7 +54,7 @@ namespace LuaDC1
             List<bool> tblswap = new List<bool>();
             List<bool> tblisglobal = new List<bool>();
             List<string> tblGlobalNames = new List<string>();
-            List<int> tblElements = new List<int>();
+            //List<int> tblElements = new List<int>();
             List<string> globalVars = new List<string>();
 
             string[] parser = { };
@@ -109,7 +107,9 @@ namespace LuaDC1
                                 luafile = String.Concat(luafile, ")");
                                 break;
                             case "CREATETABLE":
-                                tblElements.Add(int.Parse(parser[1]));
+                                //tblElements.Add(int.Parse(parser[1]));
+                                int tableElements = int.Parse(parser[1]);
+                                int countElements = 0;
                                 if (opentables == 0)
                                 {
                                     int internalopentables = 0;
@@ -154,16 +154,23 @@ namespace LuaDC1
                                             int internalindex = linex.IndexOf("SETLIST");
                                             string internalnewline = linex.Substring(index);
                                             string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
-                                            /*
-                                            if (tblElements[tblCounter - 1] == int.Parse(internalparse[2]))
+
+                                            countElements += int.Parse(internalparse[2]);
+                                            if (tableElements == countElements)
                                             {
                                                 internalopentables -= 1;
+                                                countElements = 0;
                                             }
-                                            */
+                                            else
+                                            {
+                                                setListSkip += 1;
+                                            }
+
                                             //End weird section
-                                            internalopentables -= 1;
+                                            //internalopentables -= 1;
                                             if (internalopentables == 0)
                                             {
+                                                setListCalled = true;
                                                 tblVarStatic.Add(0);
                                                 tblswap.Add(false);
                                                 if (lines[q + 1].Contains("SETGLOBAL"))
@@ -182,40 +189,47 @@ namespace LuaDC1
                                                 }
                                                 break;
                                             }
-                                            else if (linex.Contains("SETGLOBAL")) //for global tables that have no values yet
-                                            {
-                                                internalopentables -= 1;
-                                                tblVarStatic.Add(0);
+                                        }
+                                        else if (linex.Contains("SETGLOBAL")) //for global tables that have no values yet
+                                        {
+                                            internalopentables -= 1;
+                                            storeglobaltable = true;
+                                            tblVarStatic.Add(0);
                                                 tblswap.Add(false);
                                                 tblisglobal.Add(true);
-                                                internalindex = lines[q].IndexOf("SETGLOBAL");
-                                                internalnewline = lines[q].Substring(index);
-                                                internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+                                                int internalindex = lines[q].IndexOf("SETGLOBAL");
+                                                string internalnewline = lines[q].Substring(index);
+                                                string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
                                                 tblGlobalNames.Add(internalparse[3]);
                                                 break;
-                                            }
                                         }
 
-                                    }
-                                    tblDECL = 1;
-                                    opentables += 1;
-                                    tblCounter += 1;
-
-                                    if (tblisglobal[opentables - 1] == false)
-                                    {
-                                        luafile = String.Concat(luafile, System.Environment.NewLine, "local table", tblCounter, " = { ");
-                                        Console.WriteLine(String.Concat("local table", tblCounter, " = { "));
-                                        localvariablelist.Add(String.Concat("table", tblCounter));
-                                        localCounter += 1;
-                                    }
-                                    else
-                                    {
-                                        luafile = String.Concat(luafile, System.Environment.NewLine, tblGlobalNames[opentables - 1], " = { ");
-                                        Console.WriteLine(String.Concat(tblGlobalNames[opentables - 1], " = { "));
-                                    }
-                                    //int tblVals = int.Parse(parser[1]) * 2; //table and value associated with it
-
                                 }
+                                tblDECL = 1;
+                                opentables += 1;
+                                tblCounter += 1;
+
+                                    //I seriously have no clue why I have to call this again but it works
+                                    //I swear the code about 40 lines up does this EXACT same thing
+                                if (setListCalled == true)
+                                    {
+                                        tblswap[opentables - 1] = false;
+                                    }
+
+                                if (tblisglobal[opentables - 1] == false)
+                                {
+                                    luafile = String.Concat(luafile, System.Environment.NewLine, "local table", tblCounter, " = { ");
+                                    Console.WriteLine(String.Concat("local table", tblCounter, " = { "));
+                                    localvariablelist.Add(String.Concat("table", tblCounter));
+                                    localCounter += 1;
+                                }
+                                else
+                                {
+                                    luafile = String.Concat(luafile, System.Environment.NewLine, tblGlobalNames[opentables - 1], " = { ");
+                                    Console.WriteLine(String.Concat(tblGlobalNames[opentables - 1], " = { "));
+                                }
+                        }
+
                                 else if (opentables >= 1)
                                 {
                                     //luafile = String.Concat(luafile, System.Environment.NewLine, "{");
@@ -261,14 +275,19 @@ namespace LuaDC1
                                             int internalindex = linex.IndexOf("SETLIST");
                                             string internalnewline = linex.Substring(index);
                                             string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
-                                            /*
-                                            if (tblElements[tblCounter-1] == int.Parse(internalparse[2]))
+
+                                            countElements += int.Parse(internalparse[2]);
+                                            if (tableElements == countElements)
                                             {
                                                 internalopentables -= 1;
+                                                countElements = 0;
                                             }
-                                            */
+                                            else
+                                            {
+                                                setListSkip += 1;
+                                            }
                                             //End weird code section
-                                            internalopentables -= 1;
+                                            //internalopentables -= 1;
                                             if (internalopentables == 0)
                                             {
                                                 tblVarStatic.Add(0);
@@ -293,6 +312,7 @@ namespace LuaDC1
                                         else if (linex.Contains("SETGLOBAL"))
                                         {
                                             internalopentables -= 1;
+                                            storeglobaltable = true;
                                             tblVarStatic.Add(0);
                                             tblswap.Add(false);
                                             tblisglobal.Add(true);
@@ -480,7 +500,7 @@ namespace LuaDC1
                             case "PUSHSELF":
                                 break;
                             case "SETMAP":
-                                luafile = String.Concat(luafile, "}", System.Environment.NewLine);
+                                luafile = String.Concat(luafile.TrimEnd(',',' '), "}");
                                 Console.WriteLine("}");
                                 //tblVarStatic[opentables-1] = 0;
                                 opentables -= 1;
@@ -491,30 +511,42 @@ namespace LuaDC1
                                     tblGlobalNames.Clear();
                                     tblisglobal.Clear();
                                 }
+                                else
+                                {
+                                    luafile = String.Concat(luafile,",");
+                                }
                                 break;
                             case "SETLIST":
-                                elementCounter += int.Parse(parser[2]);
-                                //if (tblElements[opentables - 1] != int.Parse(parser[2]))
-                                //{
+
+                                if (setListSkip > 0)
+                                {
+                                    setListSkip -= 1;
                                     //skip and do nothing
-                               //}
-                                //else
-                               //{
-                                    luafile = String.Concat(luafile, "}", System.Environment.NewLine);
+                                }
+                                else
+                               {
+                                    luafile = String.Concat(luafile.TrimEnd(',',' '), "}");
                                     Console.WriteLine("}");
                                     //tblDECL = 0;
-                                    elementCounter = 0;
+                                    countElements = 0;
+                                    setListCalled = false;
                                     //tblVarStatic[opentables-1] = 0;
                                     opentables -= 1;
                                     if (opentables == 0)
                                     {
+                                        luafile = String.Concat(luafile, System.Environment.NewLine);
+
                                         tblDECL = 0;
                                         tblVarStatic.Clear();
                                         tblGlobalNames.Clear();
                                         tblisglobal.Clear();
                                     }
+                                    else
+                                    {
+                                        luafile = String.Concat(luafile, ",");
+                                    }
 
-                               // }
+                                }
                                 break;
                             case "GETGLOBAL":
                                 if (globalcalledlast == 0) {
@@ -633,11 +665,10 @@ namespace LuaDC1
                                     functioncounter += 1;
                                     break;
                                 }
-                                if (lines[i+1].Contains("CREATETABLE    0"))
+                                if (storeglobaltable == true)
                                 {
-                                    storeglobaltable = true;
+                                    storeglobaltable = false;
                                     luafile = String.Concat(luafile, "}", System.Environment.NewLine);
-                                    break;
                                 }
                                 break;
                             case "CALL":
@@ -759,6 +790,7 @@ namespace LuaDC1
                                     luafile = String.Concat(luafile, System.Environment.NewLine, "end");
                                     insidefunction = false;
                                 }
+                                luafile = String.Concat(luafile, System.Environment.NewLine);
                                 break;
 
                         }
