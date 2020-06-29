@@ -41,6 +41,7 @@ namespace LuaDC1
             //int insidetable = 0;
             int functioncounter = -1;
             int opentables = 0;
+            int internalelementcounter = 0;
             int elementCounter = 0;
             bool storefunctionname = false;
             bool insidefunction = false;
@@ -132,7 +133,7 @@ namespace LuaDC1
                                                 if (lines[q + 1].Contains("SETGLOBAL"))
                                                 {
                                                     tblisglobal.Add(true);
-                                                    int internalindex = internalindex = lines[q + 1].IndexOf("SETGLOBAL");
+                                                    int internalindex = lines[q + 1].IndexOf("SETGLOBAL");
                                                     string internalnewline = lines[q + 1].Substring(index);
                                                     string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
                                                     tblGlobalNames.Add(internalparse[3]);
@@ -148,12 +149,18 @@ namespace LuaDC1
                                         }
                                         else if (linex.Contains("SETLIST"))
                                         {
-                                            // if (!linex.Contains(tblElements[opentables - 1].ToString()))
-                                            //{
-                                            //     elementCounter += int.Parse(parser[2]);
-                                            // }
-                                            // else
-                                            //{
+                                            //so I had to write a fix because lua (at least in missionlist...) would cut off a set list at 37 values.
+                                            //this results in this program getting confused because there's an extra "SETLIST" that should not be there.
+                                            int internalindex = linex.IndexOf("SETLIST");
+                                            string internalnewline = linex.Substring(index);
+                                            string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+                                            /*
+                                            if (tblElements[tblCounter - 1] == int.Parse(internalparse[2]))
+                                            {
+                                                internalopentables -= 1;
+                                            }
+                                            */
+                                            //End weird section
                                             internalopentables -= 1;
                                             if (internalopentables == 0)
                                             {
@@ -162,9 +169,9 @@ namespace LuaDC1
                                                 if (lines[q + 1].Contains("SETGLOBAL"))
                                                 {
                                                     tblisglobal.Add(true);
-                                                    int internalindex = internalindex = lines[q + 1].IndexOf("SETGLOBAL");
-                                                    string internalnewline = lines[q + 1].Substring(index);
-                                                    string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+                                                    internalindex = lines[q + 1].IndexOf("SETGLOBAL");
+                                                    internalnewline = lines[q + 1].Substring(index);
+                                                    internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
                                                     tblGlobalNames.Add(internalparse[3]);
 
                                                 }
@@ -175,15 +182,15 @@ namespace LuaDC1
                                                 }
                                                 break;
                                             }
-                                            else if (linex.Contains("SETGLOBAL"))
+                                            else if (linex.Contains("SETGLOBAL")) //for global tables that have no values yet
                                             {
                                                 internalopentables -= 1;
                                                 tblVarStatic.Add(0);
                                                 tblswap.Add(false);
                                                 tblisglobal.Add(true);
-                                                int internalindex = internalindex = lines[q].IndexOf("SETGLOBAL");
-                                                string internalnewline = lines[q].Substring(index);
-                                                string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+                                                internalindex = lines[q].IndexOf("SETGLOBAL");
+                                                internalnewline = lines[q].Substring(index);
+                                                internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
                                                 tblGlobalNames.Add(internalparse[3]);
                                                 break;
                                             }
@@ -211,8 +218,8 @@ namespace LuaDC1
                                 }
                                 else if (opentables >= 1)
                                 {
-                                    luafile = String.Concat(luafile, System.Environment.NewLine, "{");
-                                    Console.WriteLine(String.Concat("{"));
+                                    //luafile = String.Concat(luafile, System.Environment.NewLine, "{");
+                                    //Console.WriteLine(String.Concat("{"));
 
                                     int internalopentables = 0;
                                     for (int q = i; q < lines.GetLength(0); q++)
@@ -233,7 +240,7 @@ namespace LuaDC1
                                                 if (lines[q + 1].Contains("SETGLOBAL"))
                                                 {
                                                     tblisglobal.Add(true);
-                                                    int internalindex = internalindex = lines[q + 1].IndexOf("SETGLOBAL");
+                                                    int internalindex = lines[q + 1].IndexOf("SETGLOBAL");
                                                     string internalnewline = lines[q + 1].Substring(index);
                                                     string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
                                                     tblGlobalNames.Add(internalparse[3]);
@@ -249,6 +256,18 @@ namespace LuaDC1
                                         }
                                         else if (linex.Contains("SETLIST"))
                                         {
+                                            //for arbitrary broken setlist refs
+                                            
+                                            int internalindex = linex.IndexOf("SETLIST");
+                                            string internalnewline = linex.Substring(index);
+                                            string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+                                            /*
+                                            if (tblElements[tblCounter-1] == int.Parse(internalparse[2]))
+                                            {
+                                                internalopentables -= 1;
+                                            }
+                                            */
+                                            //End weird code section
                                             internalopentables -= 1;
                                             if (internalopentables == 0)
                                             {
@@ -257,9 +276,9 @@ namespace LuaDC1
                                                 if (lines[q + 1].Contains("SETGLOBAL"))
                                                 {
                                                     tblisglobal.Add(true);
-                                                    int internalindex = internalindex = lines[q + 1].IndexOf("SETGLOBAL");
-                                                    string internalnewline = lines[q + 1].Substring(index);
-                                                    string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+                                                    internalindex  = lines[q + 1].IndexOf("SETGLOBAL");
+                                                    internalnewline = lines[q + 1].Substring(index);
+                                                    internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
                                                     tblGlobalNames.Add(internalparse[3]);
 
                                                 }
@@ -277,7 +296,7 @@ namespace LuaDC1
                                             tblVarStatic.Add(0);
                                             tblswap.Add(false);
                                             tblisglobal.Add(true);
-                                            int internalindex = internalindex = lines[q].IndexOf("SETGLOBAL");
+                                            int internalindex = lines[q].IndexOf("SETGLOBAL");
                                             string internalnewline = lines[q].Substring(index);
                                             string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
                                             tblGlobalNames.Add(internalparse[3]);
@@ -288,6 +307,19 @@ namespace LuaDC1
 
                                     opentables += 1;
                                     tblCounter += 1;
+
+                                    if (tblisglobal[opentables - 1] == false)
+                                    {
+                                        luafile = String.Concat(luafile, System.Environment.NewLine, " { ");
+                                        Console.WriteLine(String.Concat("local table", tblCounter, " { "));
+                                        localvariablelist.Add(String.Concat("table", tblCounter));
+                                        localCounter += 1;
+                                    }
+                                    else
+                                    {
+                                        luafile = String.Concat(luafile, System.Environment.NewLine, tblGlobalNames[opentables - 1], " = { ");
+                                        Console.WriteLine(String.Concat(tblGlobalNames[opentables - 1], " = { "));
+                                    }
                                 }
                                 break;
                             case "PUSHUPVALUE":
@@ -464,9 +496,10 @@ namespace LuaDC1
                                 elementCounter += int.Parse(parser[2]);
                                 //if (tblElements[opentables - 1] != int.Parse(parser[2]))
                                 //{
-                               // }
-                               // else
-                               // {
+                                    //skip and do nothing
+                               //}
+                                //else
+                               //{
                                     luafile = String.Concat(luafile, "}", System.Environment.NewLine);
                                     Console.WriteLine("}");
                                     //tblDECL = 0;
@@ -497,7 +530,7 @@ namespace LuaDC1
                                         }
                                         else if (linex.Contains("SETLOCAL")) 
                                         {
-                                            int internalindex = internalindex = lines[q].IndexOf("SETLOCAL");
+                                            int internalindex = lines[q].IndexOf("SETLOCAL");
                                             string internalnewline = lines[q].Substring(index);
                                             string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
                                             luafile = String.Concat(luafile, localvariablelist[int.Parse(internalparse[1])], "=");
@@ -519,7 +552,7 @@ namespace LuaDC1
                                             {
                                                 if (lines[q+1].Contains("SETLOCAL"))
                                                 {
-                                                    internalindex = internalindex = lines[q+1].IndexOf("SETLOCAL");
+                                                    internalindex = lines[q+1].IndexOf("SETLOCAL");
                                                     internalnewline = lines[q+1].Substring(index);
                                                     internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
                                                     luafile = String.Concat(luafile, localvariablelist[int.Parse(internalparse[1])], "=");
@@ -719,6 +752,7 @@ namespace LuaDC1
                                 localvariablelist.Clear();
                                 tblGlobalNames.Clear();
                                 tblisglobal.Clear();
+                                tblswap.Clear();
                                 //determine write order
                                 if (insidefunction == true)
                                 {
