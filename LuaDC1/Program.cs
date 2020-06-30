@@ -8,10 +8,10 @@ namespace LuaDC1
     class Program
     {
         public static readonly string[] vals = { "function","CREATETABLE","PUSHUPVALUE","PUSHINT","PUSHNUM","PUSHNEGNUM","PUSHSTRING","PUSHSELF",
-            "SETMAP","SETLIST","GETGLOBAL","GETINDEXED","SETGLOBAL","CALL","RETURN", //this part is ordered correctly with cases below, everything afterward needs reordered to find cases easier
+            "SETMAP","SETLIST","GETGLOBAL","GETINDEXED","SETGLOBAL","CALL","RETURN", 
             "JMP","JMPF","JMPT","JMPLT","JMPLE","JMPGT","JMPGE","JMPONT","JMPONF","JMPEQ","JMPNE","PUSHNILJMP","FORLOOP","FORPREP","LFORPREP","LFORLOOP","NOT",
-            "TAILCALL","ADD","MULT","DIV","POW","CONCAT","MINUS","ADDI","SUB","GETLOCAL","GETDOTTED","RETURN","POP",
-            "SETTABLE","SETLOCAL","PUSHNIL","CLOSURE","END",};
+            "TAILCALL","ADD","MULT","DIV","POW","CONCAT","MINUS","SUB","ADDI","SETTABLE","SETLOCAL","GETLOCAL","GETDOTTED","PUSHNIL",
+            "POP","CLOSURE","END",};
         static void Main(string[] args)
         {
 
@@ -681,6 +681,56 @@ namespace LuaDC1
                                 break;
                             case "RETURN":
                                 break;
+                            case "JMP":
+                                break;
+                            case "JMPF":
+                                break;
+                            case "JMPT":
+                                break;
+                            case "JMPLT":
+                                break;
+                            case "JMPLE":
+                                break;
+                            case "JMPGT":
+                                break;
+                            case "JMPGE":
+                                break;
+                            case "JMPONT":
+                                break;
+                            case "JMPONF":
+                                break;
+                            case "JMPEQ":
+                                break;
+                            case "JMPNE":
+                                break;
+                            case "PUSHNILJMP":
+                                break;
+                            case "FORLOOP":
+                                break;
+                            case "FORPREP":
+                                break;
+                            case "LFORPREP":
+                                break;
+                            case "LFORLOOP":
+                                break;
+                            case "NOT":
+                                break;
+                            case "TAILCALL":
+                                break;
+                            case "ADD":
+                                break;
+                            case "MULT":
+                                break;
+                            case "DIV":
+                                break;
+                            case "POW":
+                                break;
+                            case "CONCAT":
+                                break;
+                            case "MINUS":
+                                break;
+                            case "SUB":
+                                break;
                             case "ADDI":
                                 //Console.WriteLine(luafile.Substring(luafile.Length - 2));
                                 if (luafile.Substring(luafile.Length - 2) == "]=")
@@ -723,8 +773,7 @@ namespace LuaDC1
                                     globalastable = 0;
                                 }
                                 break;
-                            case "CLOSURE":
-                                storefunctionname = true;
+                            case "GETDOTTED":
                                 break;
                             case "PUSHNIL":
                                 //Console.WriteLine("nil");
@@ -772,6 +821,11 @@ namespace LuaDC1
                                         }
                                     }
                                 }
+                                break;
+                            case "POP":
+                                break;
+                            case "CLOSURE":
+                                storefunctionname = true;
                                 break;
                             case "END":
                                 tblDECL = 0;
