@@ -31,7 +31,7 @@ namespace LuaDC1
             //set ALL the variables
             int linecounter = 0;
             int tblDECL = 0;
-
+            int jumpLines = 0;
             int tblCounter = 0;
             int localCounter = 0;
             int globalcalledlast = 0;
@@ -44,6 +44,7 @@ namespace LuaDC1
             bool insidefunction = false;
             bool storeglobaltable = false;
             bool setListCalled = false;
+            bool inIf = false;
 
             string line;
 
@@ -615,6 +616,11 @@ namespace LuaDC1
                                             withincall += 1;
                                             break;
                                         }
+                                        else if (linex.Contains("GETINDEXED"))
+                                        {
+                                            globalastable = 1;
+
+                                        }
 
                                     }
                                     if (globalastable == 1) 
@@ -656,6 +662,8 @@ namespace LuaDC1
                                 }
                                 break;
                             case "GETINDEXED":
+                                globalastable = 0;
+                                luafile = String.Concat(luafile, localvariablelist[int.Parse(parser[1])], "]");
                                 break;
                             case "SETGLOBAL":
                                 if (storefunctionname == true)
@@ -682,26 +690,37 @@ namespace LuaDC1
                             case "RETURN":
                                 break;
                             case "JMP":
+                                jumpLines = int.Parse(parser[1]);
                                 break;
                             case "JMPF":
+                                //store how many to go before putting else
+                                jumpLines = int.Parse(parser[1]);
+                                //inIf = true;
                                 break;
                             case "JMPT":
+                                jumpLines = int.Parse(parser[1]);
                                 break;
                             case "JMPLT":
+                                jumpLines = int.Parse(parser[1]);
                                 break;
                             case "JMPLE":
+                                jumpLines = int.Parse(parser[1]);
                                 break;
                             case "JMPGT":
+                                jumpLines = int.Parse(parser[1]);
                                 break;
                             case "JMPGE":
+                                jumpLines = int.Parse(parser[1]);
                                 break;
                             case "JMPONT":
                                 break;
                             case "JMPONF":
                                 break;
                             case "JMPEQ":
+                                jumpLines = int.Parse(parser[1]);
                                 break;
                             case "JMPNE":
+                                jumpLines = int.Parse(parser[1]);
                                 break;
                             case "PUSHNILJMP":
                                 break;
@@ -759,6 +778,21 @@ namespace LuaDC1
                                 withincall = 0;
                                 break;
                             case "GETLOCAL":
+                                for (int q = i; q < lines.GetLength(0); q++)
+                                {
+                                    string linex = lines[q];
+                                    if (linex.Contains("JMPF"))
+                                    {
+                                        luafile = String.Concat(luafile, "if (");
+                                        inIf = true;
+                                        break;
+                                    }
+                                    else if (linex.Contains("RETURN"))
+                                    {
+                                        luafile = String.Concat(luafile, "return ");
+                                        break;
+                                    }
+                                }
                                 luafile = String.Concat(luafile, localvariablelist[int.Parse(parser[1])]);
                                 Console.WriteLine(localvariablelist[int.Parse(parser[1])]);
                                 if (globalcalledlast == 1 & globalastable == 0)
@@ -771,6 +805,11 @@ namespace LuaDC1
                                 {
                                     luafile = String.Concat(luafile, "]=");
                                     globalastable = 0;
+                                }
+                                if (inIf == true)
+                                {
+                                    luafile = String.Concat(luafile, ") then",System.Environment.NewLine);
+                                    inIf = false;
                                 }
                                 break;
                             case "GETDOTTED":
@@ -849,6 +888,18 @@ namespace LuaDC1
 
                         }
                         linecounter = linecounter + 1;
+                        if (jumpLines > 0)
+                        {
+                            jumpLines -= 1;
+                            if (jumpLines == 0 & !parser[0].Contains("JMP"))
+                            {
+                                luafile = String.Concat(luafile, System.Environment.NewLine, "end", System.Environment.NewLine);
+                            }
+                            else if (jumpLines == 0 & parser[0].Contains("JMP"))
+                            {
+                                luafile = String.Concat(luafile, System.Environment.NewLine, "else", System.Environment.NewLine);
+                            }
+                        }
                     }
                 }
             }
