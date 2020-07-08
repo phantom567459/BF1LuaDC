@@ -39,12 +39,15 @@ namespace LuaDC1
             int withincall = 0;
             int setListSkip = 0;
             int functioncounter = -1;
+            int functionNameAssigner = 0;
             int opentables = 0;
+            int retNum = 0;
             bool storefunctionname = false;
             bool insidefunction = false;
             bool storeglobaltable = false;
             bool setListCalled = false;
             bool inIf = false;
+            bool pleaseReturn = false;
 
             string line;
 
@@ -85,7 +88,7 @@ namespace LuaDC1
                         {
                             case "function":
                                 insidefunction = true;
-                                luafile = String.Concat(luafile, "function ", functionnamelist[0], "(");
+                                luafile = String.Concat(luafile,System.Environment.NewLine, "function ", functionnamelist[functionNameAssigner], "(");
                                 //do params
                                 int paramnum = int.Parse(lines[i + 1].Substring(0, 1));
                                 //Console.WriteLine(String.Concat("LOOK AT ME # OF PARAMS = ",paramnum));
@@ -106,6 +109,7 @@ namespace LuaDC1
                                 }
                                 //something something parameter count, drop in the local var list and have a field day.
                                 luafile = String.Concat(luafile, ")");
+                                functionNameAssigner += 1;
                                 break;
                             case "CREATETABLE":
                                 //tblElements.Add(int.Parse(parser[1]));
@@ -346,6 +350,36 @@ namespace LuaDC1
                             case "PUSHUPVALUE":
                                 break;
                             case "PUSHINT":
+                                for (int q = i; q < lines.GetLength(0); q++)
+                                {
+                                    string linex = lines[q];
+                                    if (linex.Contains("JMPF"))
+                                    {
+                                        luafile = String.Concat(luafile, "if (");
+                                        inIf = true;
+                                        break;
+                                    }
+                                    else if (linex.Contains("RETURN"))
+                                    {
+                                        if (retNum == 0)
+                                        {
+                                            luafile = String.Concat(luafile, "return ");
+                                            retNum = int.Parse(linex.Substring(linex.Length - 1, 1));
+                                            pleaseReturn = true;
+                                        }
+                                        break;
+                                    }
+                                    else if (linex.Contains("SET"))
+                                    {
+                                        break;
+                                    }
+                                    else if (linex.Contains("FORPREP"))
+                                    {
+                                        break;
+                                    }
+                                }
+
+
                                 if (tblDECL == 1)
                                 {
                                     if (tblVarStatic[opentables-1] == 1)
@@ -372,6 +406,17 @@ namespace LuaDC1
                                 else if (tblDECL == 0 & globalcalledlast == 1) {
                                     luafile = String.Concat(luafile, parser[1], ",");
                                     Console.WriteLine(parser[1], ",");
+                                    break;
+                                }
+                                else if (pleaseReturn == true)
+                                {
+                                    luafile = String.Concat(luafile, parser[1]);
+                                    retNum -= 1;
+                                    if (retNum > 0)
+                                    {
+                                        luafile = String.Concat(luafile,",");
+
+                                    }
                                     break;
                                 }
                                 else
@@ -550,6 +595,37 @@ namespace LuaDC1
                                 }
                                 break;
                             case "GETGLOBAL":
+                                for (int q = i; q < lines.GetLength(0); q++)
+                                {
+                                    string linex = lines[q];
+                                    if (linex.Contains("JMPF"))
+                                    {
+                                        if (inIf == false) 
+                                        {
+                                            luafile = String.Concat(luafile, "if (");
+                                            inIf = true; 
+                                        }
+                                        else
+                                        {
+                                            luafile = String.Concat(luafile, "elseif (");
+                                        }
+
+                                        break;
+                                    }
+                                    else if (linex.Contains("RETURN"))
+                                    {
+                                        luafile = String.Concat(luafile, "return ");
+                                        break;
+                                    }
+                                    else if (linex.Contains("FORPREP"))
+                                    {
+                                        break;
+                                    }
+                                    else if (linex.Contains("SET") || (linex.Contains("CALL")))
+                                    {
+                                        break;
+                                    }
+                                }
                                 if (globalcalledlast == 0) {
                                     for (int q = i; q < lines.GetLength(0); q++)
                                     {
@@ -688,6 +764,8 @@ namespace LuaDC1
                                 withincall = 0;
                                 break;
                             case "RETURN":
+                                retNum = 0;
+                                pleaseReturn = false;
                                 break;
                             case "JMP":
                                 jumpLines = int.Parse(parser[1]);
@@ -789,12 +867,30 @@ namespace LuaDC1
                                     }
                                     else if (linex.Contains("RETURN"))
                                     {
-                                        luafile = String.Concat(luafile, "return ");
+                                        if (retNum == 0)
+                                        {
+                                            luafile = String.Concat(luafile, "return ");
+                                            retNum = int.Parse(linex.Substring(linex.Length - 1, 1));
+                                            pleaseReturn = true;
+                                        }
+                                        break;
+                                    }
+                                    else if (linex.Contains("SET"))
+                                    {
+                                        break;
+                                    }
+                                    else if (linex.Contains("FORPREP"))
+                                    {
                                         break;
                                     }
                                 }
                                 luafile = String.Concat(luafile, localvariablelist[int.Parse(parser[1])]);
-                                Console.WriteLine(localvariablelist[int.Parse(parser[1])]);
+                                if (retNum > 0)
+                                {
+                                    luafile = String.Concat(luafile, ",");
+                                    retNum -= 1;
+                                }
+
                                 if (globalcalledlast == 1 & globalastable == 0)
                                 {
                                     luafile = String.Concat(luafile,",");
@@ -813,6 +909,7 @@ namespace LuaDC1
                                 }
                                 break;
                             case "GETDOTTED":
+                                luafile = String.Concat(luafile, ".", parser[3]);
                                 break;
                             case "PUSHNIL":
                                 //Console.WriteLine("nil");
