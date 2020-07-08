@@ -637,6 +637,10 @@ namespace LuaDC1
                                             globalastable = 1;
                                             break;
                                         }
+                                        else if (linex.Contains("JMPF"))
+                                        {
+                                            break;
+                                        }
                                         else if (linex.Contains("SETLOCAL")) 
                                         {
                                             int internalindex = lines[q].IndexOf("SETLOCAL");
@@ -653,7 +657,7 @@ namespace LuaDC1
                                             string[] internalparse = internalnewline.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
 
                                             int numoflocs = int.Parse(internalparse[2]);
-                                            if (numoflocs == 0)
+                                            if (numoflocs == 0 || numoflocs == 255)
                                             {
                                                 break;
                                             }
@@ -713,6 +717,11 @@ namespace LuaDC1
                                             Console.WriteLine(parser[3]);
                                             luafile = String.Concat(luafile, parser[3]);
                                             globalcalledlast = 1;
+                                        }
+                                        else if (inIf == true)
+                                        {
+                                            luafile = String.Concat(luafile, parser[3],") then");
+                                            inIf = false;
                                         }
                                         else
                                        {
