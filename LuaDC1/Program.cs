@@ -21,17 +21,34 @@ namespace LuaDC1
            // Console.WriteLine("Arguments:");
 
             string filename;
-
-            if (args.Length == 1)
+            List<string> help_args = new List<string>(new string[] { "-h","--help", "/?",  "/h" });  // these are often used for program help messages
+            if (args.Length > 0 && help_args.IndexOf(args[0]) > -1)
+            {
+                PrintHelp();
+                return;
+            }
+            if (args.Length > 0)
             {
                 filename = args[0];
             }
             else
             {
-                Console.WriteLine("Please enter argument in this fashion - program.exe <NAME-IN>");
+                PrintHelp();
                 return; //stop further execution
             }
-            string newname = String.Concat(filename.Substring(0, filename.Length - 4),".lua");
+            if (!File.Exists(filename))
+            {
+                Console.WriteLine("Error! File '{0}' Does not exist\n", filename);
+                return;
+            }
+
+            string outputFilename = GetOutputFileName(args);
+            if( outputFilename == null)
+            {
+                PrintHelp();
+                return;
+            }
+
             string[] lines = System.IO.File.ReadAllLines(filename); //each individual line
 
             // StreamWriter sw = new StreamWriter(newname);
@@ -1022,7 +1039,46 @@ namespace LuaDC1
             }
             //lol @lua for needing an escape character
             luafile = luafile.Replace("\\","\\\\");
-            System.IO.File.WriteAllText(newname, luafile);
+            Console.WriteLine("Writing file: '{0}'", outputFilename); // tell the user the filename we are writing.
+            System.IO.File.WriteAllText(outputFilename, luafile);
+        }
+
+        private static string GetOutputFileName(string[] args)
+        {
+            string retVal = null;
+            if (args.Length == 3 && args[1].ToLower() == "-o")
+                retVal = args[2];
+            else if (args.Length == 1)
+            {
+                string filename = args[0];
+                int dotIndex = filename.LastIndexOf('.');
+                if (dotIndex > -1)
+                    retVal = filename.Substring(0, dotIndex) + ".lua";
+                else  // input file has no extension
+                    retVal = filename + ".lua";
+            }
+            return retVal;
+        }
+        private static void PrintHelp()
+        {
+            //Console.WriteLine("Please enter argument in this fashion - program.exe <NAME-IN>");
+            string help =
+@"USAGE:
+  LuaDC1.exe <input file>
+  Saves the decompiled file to the <input file>.lua (replaces input file extension with '.lua')
+or
+  LuaDC1.exe <input file> -o <outfile>
+  Saves the decompiled file to the output file specified
+
+Options:
+  -o <outfile>  (optional) Write (successful) decompiled data to the specified file (defaults to <input file>.lua ).
+  -h --help /? /h Prints help message
+
+Requirements:
+  The input file must be a lua 4.0 listing, (usually) created with luac.exe (found at 'BFBuilder\ToolsFL\bin\luac.exe')
+      'luac.exe -l <compiled lua 4.0 file>'
+";
+            Console.WriteLine(help);
         }
     }
 }
