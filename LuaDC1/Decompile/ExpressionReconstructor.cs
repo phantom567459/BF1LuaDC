@@ -416,10 +416,16 @@ public sealed class ExpressionReconstructor
 
     private string Name(int slot)
     {
-        if (slot < _p.Locals.Length && !string.IsNullOrEmpty(_p.Locals[slot].Name))
+        // Use the real debug name when present, but skip Lua's internal placeholder locals -- the
+        // for-loop control variables it names "(for limit)", "(table)", etc. -- which aren't valid
+        // identifiers and don't denote a real source local.
+        if (slot < _p.Locals.Length && IsValidName(_p.Locals[slot].Name))
             return _p.Locals[slot].Name;
         return "var" + slot;
     }
+
+    private static bool IsValidName(string? n) =>
+        !string.IsNullOrEmpty(n) && (char.IsLetter(n[0]) || n[0] == '_') && n.All(c => char.IsLetterOrDigit(c) || c == '_');
 
     private string Str(int i) => i >= 0 && i < _p.Strings.Length ? _p.Strings[i] : "?str" + i;
     private double Num(int i) => i >= 0 && i < _p.Numbers.Length ? _p.Numbers[i] : double.NaN;

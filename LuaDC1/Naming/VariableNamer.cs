@@ -140,6 +140,9 @@ public static class VariableNamer
 
     private static string Sanitize(string name)
     {
+        // Strip anything that isn't identifier-legal so a heuristic can never yield uncompilable
+        // output (e.g. a stray "(table)").
+        name = new string(name.Where(c => char.IsLetterOrDigit(c) || c == '_').ToArray());
         if (name.Length == 0) return "v";
         if (!char.IsLetter(name[0]) && name[0] != '_') name = "v" + name;
         return IsKeyword(name) ? name + "_" : name;
