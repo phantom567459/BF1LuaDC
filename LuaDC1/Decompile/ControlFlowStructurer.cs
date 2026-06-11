@@ -92,7 +92,10 @@ public static class ControlFlowStructurer
         private int BuildIfOrWhile(int i, int hi, int loopExitPc, IReadOnlySet<int> merges, List<Stmt> result)
         {
             var (cond, exitPc, bodyStart) = ParseCondition(i);
-            int bodyEnd = IndexAtPc(exitPc);
+            // Clamp to the enclosing block: when the condition's skip target is a far shared merge
+            // (e.g. a loop end past a sibling else), the body must not extend past `hi` and swallow
+            // that sibling content.
+            int bodyEnd = Math.Min(IndexAtPc(exitPc), hi);
 
             // while: the body's last item is an unconditional backward jump to the condition.
             if (bodyEnd - 1 > bodyStart && _items[bodyEnd - 1] is ControlItem back
