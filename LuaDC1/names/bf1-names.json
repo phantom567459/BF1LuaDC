@@ -1,0 +1,1407 @@
+{
+  "params": {
+    "gPopup_Error_fnActivate": [
+      "this",
+      "vis"
+    ],
+    "gPopup_Error_fnInput_Accept": [
+      "this"
+    ],
+    "IFButton_fnSetSize": [
+      "this",
+      "w",
+      "h"
+    ],
+    "IFButton_fnSelect": [
+      "this",
+      "on",
+      "labelonly"
+    ],
+    "IFButton_fnHilight": [
+      "this",
+      "on",
+      "dt"
+    ],
+    "NewIFButton": [
+      "Template"
+    ],
+    "SetCurButton": [
+      "NameStr"
+    ],
+    "SetCurButtonTable": [
+      "this"
+    ],
+    "RoundIFButtonSkin_fnSetSize": [
+      "this",
+      "w",
+      "h"
+    ],
+    "RoundIFButtonSkin_fnSelect": [
+      "this",
+      "NewTexture",
+      "NewAlpha"
+    ],
+    "RoundIFButtonLabel_fnSetSize": [
+      "this",
+      "w",
+      "h"
+    ],
+    "RoundIFButtonLabel_fnSelect": [
+      "this",
+      "on"
+    ],
+    "RoundIFButtonLabel_fnSetString": [
+      "this",
+      "str"
+    ],
+    "RoundIFButtonLabel_fnSetUString": [
+      "this",
+      "str"
+    ],
+    "RoundIFButtonLabel_fnHilight": [
+      "this",
+      "on",
+      "fDt",
+      "w",
+      "h"
+    ],
+    "RoundIFButtonSkin_fnHilight": [
+      "this",
+      "on",
+      "fDt",
+      "w",
+      "h"
+    ],
+    "NewRoundIFButton": [
+      "Template"
+    ],
+    "NewClickableIFButton": [
+      "Template"
+    ],
+    "ifelem_shellscreen_fnStartMovie": [
+      "movieName",
+      "loop",
+      "nextMovieName",
+      "fullscreen",
+      "left",
+      "top",
+      "width",
+      "height"
+    ],
+    "ifelm_shellscreen_fnPlaySound": [
+      "sound"
+    ],
+    "ifelem_shellscreen_fnPostError": [
+      "this",
+      "bUserHitYes",
+      "ErrorLevel",
+      "ErrorMessage"
+    ],
+    "gIFShellScreenTemplate_CommonUpdate": [
+      "this",
+      "fDt"
+    ],
+    "gIFShellScreenTemplate_fnUpdate": [
+      "this",
+      "fDt"
+    ],
+    "gIFShellScreenTemplate_fnMoveIcon": [
+      "Container"
+    ],
+    "gIFShellScreenTemplate_fnMoveClickableButton": [
+      "ObjToMove",
+      "TextToGetWidthFrom",
+      "xAdd"
+    ],
+    "gIFShellScreenTemplate_fnCenterClickableButton": [
+      "ObjToMove",
+      "TextToGetWidthFrom",
+      "xAdd",
+      "string"
+    ],
+    "gIFShellScreenTemplate_fnEnter": [
+      "this",
+      "bFwd"
+    ],
+    "gIFShellScreenTemplate_fnLeave": [
+      "this",
+      "bFwd"
+    ],
+    "HackBGTextureOnPCOnly": [
+      "texture"
+    ],
+    "NewIFShellScreen_common": [
+      "temp",
+      "Template"
+    ],
+    "NewIFShellScreen": [
+      "Template"
+    ],
+    "gIFShellScreenTemplate2_fnUpdate": [
+      "this",
+      "fDt"
+    ],
+    "gIFShellScreenTemplate2_fnEnter": [
+      "this"
+    ],
+    "gIFShellScreenTemplate2_fnLeave": [
+      "this"
+    ],
+    "FollowButtonLink": [
+      "container",
+      "CurrentStr",
+      "DirStr"
+    ],
+    "gShellScreen_AddGamepadIconToUpdates": [
+      "this"
+    ],
+    "gShellScreen_fnDefaultInputAccept": [
+      "this",
+      "bSkipListBox"
+    ],
+    "gShellScreen_fnDefaultInputUp": [
+      "this"
+    ],
+    "gShellScreen_fnDefaultInputDown": [
+      "this"
+    ],
+    "gDefault_Input_GeneralUp": [
+      "this"
+    ],
+    "gDefault_Input_GeneralDown": [
+      "this"
+    ],
+    "gDefault_Input_GeneralRight": [
+      "this"
+    ],
+    "gDefault_Input_GeneralLeft": [
+      "this"
+    ],
+    "gDefault_Input_GeneralUp2": [
+      "this"
+    ],
+    "gDefault_Input_GeneralDown2": [
+      "this"
+    ],
+    "gDefault_Input_GeneralRight2": [
+      "this"
+    ],
+    "gDefault_Input_GeneralLeft2": [
+      "this"
+    ],
+    "NewIFScreen": [
+      "Template"
+    ],
+    "NewIFShellScreen2": [
+      "Template"
+    ],
+    "AwardStats_Listbox_CreateItem": [
+      "layout"
+    ],
+    "AwardStats_Listbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "ifs_awardstats_fnBlankContents": [
+      "this"
+    ],
+    "ifs_awardstats_seticonstartside": [
+      "idx"
+    ],
+    "ifs_awardstats_fnBuildScreen": [
+      "this"
+    ],
+    "ifs_mp_lobby_Listbox_CreateItem": [
+      "layout"
+    ],
+    "ifs_mp_lobby_Listbox_fnShowHideIdiot": [
+      "Dest",
+      "bIdiotMode"
+    ],
+    "ifs_mp_lobby_Listbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "ifs_mp_lobby_fnLeavePopupDone": [
+      "bResult"
+    ],
+    "ifs_mp_lobby_fnShowHideItems": [
+      "this",
+      "bNormalVis"
+    ],
+    "ifs_mp_lobby_SetHilight": [
+      "this",
+      "aListIndex"
+    ],
+    "ifs_mp_lobby_fnSetIdiotMode": [
+      "this",
+      "bNewMode"
+    ],
+    "ifs_mp_lobby_fnBuildScreen": [
+      "this"
+    ],
+    "ifs_opt_controller_vehunit_updateStrings": [
+      "this"
+    ],
+    "ifs_opt_controller_SetLineVisibility": [
+      "this",
+      "vis",
+      "ShowTable"
+    ],
+    "ifs_opt_controller_fnMoveCursor": [
+      "this"
+    ],
+    "ifs_opt_controller_fnSetNextButton": [
+      "this",
+      "Next"
+    ],
+    "ifs_opt_controller_fnResetPopupDone": [
+      "bResult"
+    ],
+    "ifs_controller_listbox_CreateItem": [
+      "layout"
+    ],
+    "ifs_controller_listbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "ifs_opt_controller_UpdateAll": [
+      "this"
+    ],
+    "ifs_opt_controller_CreateElements": [
+      "this"
+    ],
+    "ifs_build_sliders": [
+      "this"
+    ],
+    "ifs_build_background_and_tabs": [
+      "this"
+    ],
+    "ifs_opt_controller_UpdateSensitivity": [
+      "this"
+    ],
+    "ifs_opt_controller_GetAllEntries": [
+      "this"
+    ],
+    "ifs_opt_controller_SetEntry": [
+      "this",
+      "buttonIdx",
+      "menuIdx"
+    ],
+    "ifs_opt_controller_ChangeJoySensitivity": [
+      "this",
+      "that"
+    ],
+    "ifs_opt_general_fnUpdateStrings": [
+      "this"
+    ],
+    "ifs_opt_general_fnBuildScreen": [
+      "this"
+    ],
+    "ifs_mp_opt_fnBadHostPopupDone": [
+      "bResult"
+    ],
+    "ifs_opt_mp_fnUpdateStrings": [
+      "this"
+    ],
+    "ifs_opt_mp_fnBuildScreen": [
+      "this"
+    ],
+    "ifs_opt_pckeyboard_Listbox_CreateItem": [
+      "layout"
+    ],
+    "ifs_opt_pckeyboard_Listbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "ifs_opt_pckeyboard_CreateListboxContents": [
+      "contents"
+    ],
+    "ifs_opt_pccontrols_fnUpdateStrings": [
+      "this"
+    ],
+    "ifs_opt_pccontrols_fnChangeMouseSensitivity": [
+      "this",
+      "delta"
+    ],
+    "ifs_opt_pccontrols_fnChangeJoySensitivity": [
+      "this",
+      "delta"
+    ],
+    "ifs_opt_pccontrols_fnBuildScreen": [
+      "this"
+    ],
+    "ifs_opt_pcvideo_refresh_reslistbox": [
+      "this"
+    ],
+    "ifs_opt_pcvideo_fnAutoDetect": [
+      "this"
+    ],
+    "ifs_opt_pcvideo_fnUpdateStrings": [
+      "this"
+    ],
+    "ifs_opt_pcvideo_ChangeSetting": [
+      "this",
+      "next"
+    ],
+    "ifs_opt_pcvideo_reslistbox_CreateItem": [
+      "layout"
+    ],
+    "ifs_opt_pcvideo_reslistbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "ifs_opt_pcvideo_fsaalistbox_CreateItem": [
+      "layout"
+    ],
+    "ifs_opt_pcvideo_fsaalistbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "reslistbox_CreateItem": [
+      "layout"
+    ],
+    "reslistbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "fsaalistbox_CreateItem": [
+      "layout"
+    ],
+    "fsaalistbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "ifs_opt_pcvideo_fnBuildScreen": [
+      "this",
+      "layout"
+    ],
+    "ifs_opt_sound_fnUpdateSliders": [
+      "this"
+    ],
+    "ifs_opt_sound_fnIsASlider": [
+      "button"
+    ],
+    "ifs_opt_sound_SetAlpha": [
+      "cpointer",
+      "val"
+    ],
+    "ifs_opt_sound_getBarSize": [
+      "this"
+    ],
+    "ifs_opt_sound_updateLogo": [
+      "this"
+    ],
+    "ifs_opt_sound_closeShellSound": [
+      "this"
+    ],
+    "ifs_opt_sound_restoreShellSound": [
+      "bgMovie"
+    ],
+    "ifs_opt_sound_fnUpdateButtons": [
+      "this"
+    ],
+    "ifs_opt_sound_fnBuildSliders": [
+      "this",
+      "layout",
+      "w",
+      "h"
+    ],
+    "ifs_opt_sound_fnBuildScreen": [
+      "this"
+    ],
+    "PersonalStats_Listbox_CreateItem": [
+      "layout"
+    ],
+    "PersonalStats_Listbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "ifs_personalstats_fnBlankContents": [
+      "this"
+    ],
+    "ifs_personalstats_fnBuildScreen": [
+      "this"
+    ],
+    "Teamstats_Listbox_CreateItem": [
+      "layout"
+    ],
+    "Teamstats_Listbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "ifs_teamstats_fnFillContents": [
+      "this",
+      "noAnimate"
+    ],
+    "ifs_teamstats_fnBlankContents": [
+      "this"
+    ],
+    "ifs_teamstats_fnFlipLeftRight": [
+      "this"
+    ],
+    "ifs_teamstats_fnValidateCursor": [
+      "this"
+    ],
+    "ifs_teamstats_fnNav": [
+      "fn"
+    ],
+    "ifs_teamstats_fnBuildScreen": [
+      "this"
+    ],
+    "HandleMouse_Text": [
+      "this",
+      "MouseX",
+      "MouseY",
+      "ScreenX",
+      "ScreenY"
+    ],
+    "HandleMouse_Model": [
+      "this",
+      "MouseX",
+      "MouseY",
+      "ScreenX",
+      "ScreenY"
+    ],
+    "HandleMouse_Galaxy": [
+      "this",
+      "MouseX",
+      "MouseY",
+      "ScreenX",
+      "ScreenY"
+    ],
+    "HandleMouse_Button": [
+      "this",
+      "MouseX",
+      "MouseY",
+      "ScreenX",
+      "ScreenY"
+    ],
+    "HandleMouse_ButtonWindow": [
+      "this",
+      "MouseX",
+      "MouseY",
+      "ScreenX",
+      "ScreenY"
+    ],
+    "HandleMouse_Editbox": [
+      "this",
+      "MouseX",
+      "MouseY",
+      "ScreenX",
+      "ScreenY"
+    ],
+    "HandleMouse_Image": [
+      "this",
+      "MouseX",
+      "MouseY",
+      "ScreenX",
+      "ScreenY"
+    ],
+    "HandleMouse_Listbox": [
+      "this",
+      "MouseX",
+      "MouseY",
+      "ScreenX",
+      "ScreenY"
+    ],
+    "HandleMouse_HSlider": [
+      "this",
+      "MouseX",
+      "MouseY",
+      "ScreenX",
+      "ScreenY"
+    ],
+    "HandleMouseRecurse": [
+      "this",
+      "MouseX",
+      "MouseY",
+      "ScreenX",
+      "ScreenY",
+      "that"
+    ],
+    "gHandleMouse": [
+      "this",
+      "MouseX",
+      "MouseY",
+      "ScreenX",
+      "ScreenY"
+    ],
+    "createObj": [
+      "old",
+      "init"
+    ],
+    "gIFObjTemplate_fnSetSize": [
+      "this",
+      "w",
+      "h"
+    ],
+    "IFObj_fnSetZPos": [
+      "this",
+      "aVal"
+    ],
+    "IFObj_fnSetPos": [
+      "this",
+      "x",
+      "y",
+      "z"
+    ],
+    "IFObj_fnGetPos": [
+      "this"
+    ],
+    "IFObj_fnSetVis": [
+      "this",
+      "v"
+    ],
+    "IFObj_fnGetVis": [
+      "this"
+    ],
+    "IFObj_fnSetColor": [
+      "this",
+      "R",
+      "G",
+      "B"
+    ],
+    "IFObj_fnSetAlpha": [
+      "this",
+      "a"
+    ],
+    "IFText_fnSetString": [
+      "this",
+      "str"
+    ],
+    "IFText_fnSetUString": [
+      "this",
+      "str"
+    ],
+    "IFText_fnSetFont": [
+      "this",
+      "fontname"
+    ],
+    "IFText_fnSetStyle": [
+      "this",
+      "style"
+    ],
+    "IFText_fnSetScale": [
+      "this",
+      "HScale",
+      "VScale"
+    ],
+    "IFFlashyText_fnSetup": [
+      "this",
+      "delay",
+      "flipped",
+      "width",
+      "xflipped",
+      "tail"
+    ],
+    "IFImage_fnSetTexturePos": [
+      "this",
+      "l",
+      "t",
+      "r",
+      "b"
+    ],
+    "IFImage_fnSetUVs": [
+      "this",
+      "l",
+      "t",
+      "r",
+      "b",
+      "diag"
+    ],
+    "IFImage_fnSetTexture": [
+      "this",
+      "tex",
+      "a"
+    ],
+    "IFModel_fnSetMsh": [
+      "this",
+      "ModelStr"
+    ],
+    "IFModel_fnSetOmegaY": [
+      "this",
+      "fOY"
+    ],
+    "IFModel_fnSetScale": [
+      "this",
+      "fScale"
+    ],
+    "NewIFObj": [
+      "Template"
+    ],
+    "NewIFText": [
+      "Template"
+    ],
+    "NewIFImage": [
+      "Template"
+    ],
+    "NewIFModel": [
+      "Template"
+    ],
+    "NewIFContainer": [
+      "Template"
+    ],
+    "AddIFObjectBase": [
+      "obj"
+    ],
+    "AddIFText": [
+      "obj",
+      "name"
+    ],
+    "AddIFImage": [
+      "obj",
+      "name"
+    ],
+    "AddIFModel": [
+      "obj",
+      "name"
+    ],
+    "DoPostDelete": [
+      "c"
+    ],
+    "AddIFObjContainer": [
+      "c",
+      "name"
+    ],
+    "NewIFGamepadImage": [
+      "a",
+      "b",
+      "c"
+    ],
+    "CreateMiddleButton": [
+      "a",
+      "b",
+      "c"
+    ],
+    "CreatePositiveButton": [
+      "a",
+      "b",
+      "c"
+    ],
+    "CreateNegativeButton": [
+      "a",
+      "b",
+      "c"
+    ],
+    "AddIFScreen": [
+      "table",
+      "name"
+    ],
+    "CreatePopupInC": [
+      "table",
+      "name"
+    ],
+    "AddVerticalButtons": [
+      "dest",
+      "layout"
+    ],
+    "ShowHideVerticalButtons": [
+      "dest",
+      "layout",
+      "hideall"
+    ],
+    "AddHorizontalButtons": [
+      "dest",
+      "layout"
+    ],
+    "AddGamepadIcons": [
+      "dest",
+      "layout",
+      "x2"
+    ],
+    "AddHorizontalButtonsWithGamepad": [
+      "dest",
+      "layout"
+    ],
+    "ShowHideHorizontalButtons": [
+      "dest",
+      "layout"
+    ],
+    "ShowHideHorizontalGamepadButtons": [
+      "dest",
+      "layout"
+    ],
+    "AddVerticalText": [
+      "dest",
+      "layout"
+    ],
+    "ShowHideVerticalText": [
+      "dest",
+      "layout"
+    ],
+    "AddVerticalOptions": [
+      "dest",
+      "layout"
+    ],
+    "IFFlashyText_StartFlashiness": [
+      "this"
+    ],
+    "IFFlashyText_FlashElementNum": [
+      "this",
+      "cnt"
+    ],
+    "IFFlashyText_DoRandomFlashiness": [
+      "this"
+    ],
+    "IFObj_UpdateBlinkyAnim": [
+      "obj",
+      "isOn",
+      "minAlpha",
+      "maxAlpha",
+      "timeUp",
+      "timeDn"
+    ],
+    "NewPCIFButton": [
+      "Template"
+    ],
+    "NewPCIF_Basic_Button": [
+      "Template"
+    ],
+    "gPopup_AB_fnActivate": [
+      "this",
+      "vis"
+    ],
+    "gPopup_AB_fnInput_Accept": [
+      "this",
+      "iJoystick"
+    ],
+    "gPopup_Busy_fnActivate": [
+      "this",
+      "vis"
+    ],
+    "gPopup_Busy_fnInput_Accept": [
+      "this"
+    ],
+    "gPopup_Ok_fnActivate": [
+      "this",
+      "vis"
+    ],
+    "gPopup_Ok_fnInput_Accept": [
+      "this"
+    ],
+    "gPopup_YesNo_fnActivate": [
+      "this",
+      "vis"
+    ],
+    "gPopup_YesNo_fnInput_Accept": [
+      "this",
+      "iJoystick"
+    ],
+    "gPopup_YesNo_fnInput_GeneralLeft": [
+      "this",
+      "iJoystick"
+    ],
+    "gPopup_YesNo_fnInput_GeneralRight": [
+      "this",
+      "iJoystick"
+    ],
+    "AnimationMgr_ClearAnimations": [
+      "obj"
+    ],
+    "AnimationMgr_AddAnimation": [
+      "obj",
+      "Template"
+    ],
+    "AnimationMgr_Update": [
+      "fDt"
+    ],
+    "BorderRectSkin_fnSetSize": [
+      "this",
+      "w",
+      "h"
+    ],
+    "BorderRect_fnSetTexture": [
+      "this",
+      "NewTexture",
+      "NewAlpha"
+    ],
+    "BorderRectSkin_fnHilight": [
+      "this",
+      "on",
+      "fDt",
+      "w",
+      "h"
+    ],
+    "NewBorderRect": [
+      "Template"
+    ],
+    "gButtonWindowSkin_fnSetSize": [
+      "this",
+      "w",
+      "h"
+    ],
+    "gButtonWindowSkin_fnSetTexture": [
+      "this",
+      "NewTexture",
+      "NewAlpha"
+    ],
+    "gButtonWindowSkin_fnActivate": [
+      "this"
+    ],
+    "gButtonWindow_fnSetSize": [
+      "this",
+      "w",
+      "h"
+    ],
+    "gButtonWindow_fnActivate": [
+      "this",
+      "on"
+    ],
+    "gButtonWindow_fnSetTexture": [
+      "this",
+      "NewTexture",
+      "NewAlpha"
+    ],
+    "gButtonWindow_fnSetText": [
+      "this",
+      "NewText"
+    ],
+    "NewButtonWindow": [
+      "Template"
+    ],
+    "IFEditbox_fnSetString": [
+      "this",
+      "NewStr"
+    ],
+    "IFEditbox_fnSetUString": [
+      "this",
+      "NewUStr"
+    ],
+    "IFEditbox_fnGetString": [
+      "this"
+    ],
+    "IFEditbox_fnSetFont": [
+      "this",
+      "NewFont"
+    ],
+    "IFEditbox_fnSetScale": [
+      "this",
+      "HScale",
+      "VScale"
+    ],
+    "IFEditbox_fnMoveCursor": [
+      "this"
+    ],
+    "IFEditbox_fnAddChar": [
+      "this",
+      "iChar"
+    ],
+    "IFEditbox_fnHilight": [
+      "this",
+      "bBright"
+    ],
+    "IFEditbox_fnBounceCursor": [
+      "this",
+      "fDt"
+    ],
+    "NewEditbox": [
+      "Template"
+    ],
+    "NewFlatIFButton": [
+      "Template"
+    ],
+    "HSlider_MoveThumb": [
+      "this"
+    ],
+    "HSlider_fnSetAlpha": [
+      "this",
+      "a"
+    ],
+    "NewHSlider": [
+      "Template"
+    ],
+    "ListManager_fnInitList": [
+      "Dest",
+      "Layout"
+    ],
+    "ListManager_fnAutoscroll": [
+      "Dest",
+      "Source",
+      "Layout",
+      "bNoRedraw"
+    ],
+    "ListManager_fnScrollbarClick": [
+      "this"
+    ],
+    "ListManager_fnFillContents": [
+      "Dest",
+      "Source",
+      "Layout"
+    ],
+    "ListManager_fnMoveCursor": [
+      "Dest",
+      "Layout"
+    ],
+    "ListManager_fnHilight": [
+      "this",
+      "fDt"
+    ],
+    "ListManager_fnNavUp": [
+      "Dest",
+      "Source",
+      "Layout"
+    ],
+    "ListManager_fnNavDown": [
+      "Dest",
+      "Source",
+      "Layout"
+    ],
+    "ListManager_fnPageUp": [
+      "Dest",
+      "Source",
+      "Layout"
+    ],
+    "ListManager_fnPageDown": [
+      "Dest",
+      "Source",
+      "Layout"
+    ],
+    "ListManager_fnScrollUp": [
+      "Dest",
+      "Source",
+      "Layout"
+    ],
+    "ListManager_fnScrollDown": [
+      "Dest",
+      "Source",
+      "Layout"
+    ],
+    "gPopup_fnActivate": [
+      "this",
+      "v"
+    ],
+    "gPopup_fnIsActive": [
+      "this"
+    ],
+    "gPopup_fnInput_Back": [
+      "this"
+    ],
+    "PopupHandleMouse": [
+      "this",
+      "fMouseX",
+      "fMouseY"
+    ],
+    "NewPopup": [
+      "Template"
+    ],
+    "NewSegmentLine": [
+      "x1",
+      "y1",
+      "x2",
+      "y2",
+      "label",
+      "labeloffs"
+    ],
+    "TitleBarSkin_fnSetSize": [
+      "this",
+      "w",
+      "h"
+    ],
+    "TitleBarSkin_fnSelect": [
+      "this",
+      "NewTexture",
+      "NewAlpha"
+    ],
+    "TitleBarLabel_fnSetSize": [
+      "this",
+      "w",
+      "h"
+    ],
+    "TitleBarLabel_fnSetString": [
+      "this",
+      "str"
+    ],
+    "TitleBarLabel_fnSetUString": [
+      "this",
+      "str"
+    ],
+    "TitleBarLabel_fnHilight": [
+      "this",
+      "on",
+      "fDt",
+      "w",
+      "h"
+    ],
+    "TitleBarSkin_fnHilight": [
+      "this",
+      "on",
+      "fDt",
+      "w",
+      "h"
+    ],
+    "NewIFTitleBar": [
+      "Template"
+    ],
+    "ifs_charselect_fnBuildScreen": [
+      "this",
+      "mode"
+    ],
+    "Fakeconsole_Listbox_CreateItem": [
+      "layout"
+    ],
+    "Fakeconsole_Listbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "ifs_mapselect_fnBuildScreen": [
+      "this",
+      "mode"
+    ],
+    "ifs_movietrans_PushScreen": [
+      "nextScreen"
+    ],
+    "GSFriends_Listbox_CreateItem": [
+      "layout"
+    ],
+    "GSFriends_Listbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "ifs_mpgs_fnStartJoin": [
+      "this"
+    ],
+    "ifs_mpgs_friends_fnShowListbox": [
+      "this",
+      "bShowListbox",
+      "bImmediate"
+    ],
+    "ifs_mpgs_friends_fnAskedJoin": [
+      "bResult"
+    ],
+    "ifs_mpgs_friends_fnAskedRemove": [
+      "bResult"
+    ],
+    "ifs_mpgs_friends_fnAskedNever": [
+      "bResult"
+    ],
+    "ifs_mpgs_friends_fnBuildScreen": [
+      "this"
+    ],
+    "ifs_mpxl_feedback_fnShowItems": [
+      "this",
+      "bShowButtons",
+      "bImmediate"
+    ],
+    "ifs_mpxl_feedback_fnAskedNegative": [
+      "bResult"
+    ],
+    "ifs_mpxl_feedback_fnBuildScreen": [
+      "this"
+    ],
+    "XLFriends_Listbox_CreateItem": [
+      "layout"
+    ],
+    "XLFriends_Listbox_PopulateItem": [
+      "Dest",
+      "Data"
+    ],
+    "ifs_mpxl_friends_RebootNotCanceled": [
+      "bResult"
+    ],
+    "ifs_mpxl_fnStartJoin": [
+      "this"
+    ],
+    "ifs_mpxl_friends_fnShowListbox": [
+      "this",
+      "bShowListbox",
+      "bImmediate"
+    ],
+    "ifs_mpxl_friends_fnAskedJoin": [
+      "bResult"
+    ],
+    "ifs_mpxl_friends_fnAskedRemove": [
+      "bResult"
+    ],
+    "ifs_mpxl_friends_fnAskedNever": [
+      "bResult"
+    ],
+    "ifs_mpxl_friends_fnBuildScreen": [
+      "this"
+    ],
+    "ifs_mpxl_voicemail_fnAskedBlock": [
+      "bResult"
+    ],
+    "ifs_mpxl_voicemail_fnBuildScreen": [
+      "this"
+    ],
+    "ifs_opt_pckeyboard_fnInitScreen": [
+      "this"
+    ],
+    "ifs_pausemenu_fnSetPieceVis": [
+      "this",
+      "bVis"
+    ],
+    "ifs_pausemenu_fnUpdateFreecamText": [
+      "this"
+    ],
+    "ifs_pausemenu_fnQuitPopupDone": [
+      "bResult"
+    ],
+    "ifs_pausemenu2_fnQuitPopupDone": [
+      "bResult"
+    ],
+    "ifs_pausemenu_fnExitPopupDone": [
+      "bResult"
+    ],
+    "ifs_pausemenu_fnSuicidePopupDone": [
+      "bResult"
+    ],
+    "ifs_pausemenu2_fnSuicidePopupDone": [
+      "bResult"
+    ],
+    "ifs_pausemenu_fnRestartPopupDone": [
+      "bResult"
+    ],
+    "ifs_pausemenu2_fnRestartPopupDone": [
+      "bResult"
+    ],
+    "ifs_pc_SpawnSelect_fnBuildScreen": [
+      "this",
+      "mode"
+    ],
+    "ifs_pc_spawnselect_animateicons": [
+      "which"
+    ],
+    "ifs_readyselect_fnBuildScreen": [
+      "this",
+      "mode"
+    ],
+    "ifs_saveop_SavePromptAccept": [
+      "fRet"
+    ],
+    "ifs_saveop_DeletePromptDone": [
+      "bResult"
+    ],
+    "ifs_saveop_PreOpDone": [
+      "bSuccess"
+    ],
+    "ifs_saveop_InitialMemcardCheckDone": [
+      "bSuccess"
+    ],
+    "ifs_saveop_LoadProfileDone": [
+      "bSuccess"
+    ],
+    "ifs_saveop_SaveProfileDone": [
+      "bSuccess"
+    ],
+    "ifs_saveop_ProfileOverwritePromptDone": [
+      "bResult"
+    ],
+    "ifs_saveop_DeleteProfileDone": [
+      "bSuccess"
+    ],
+    "ifs_saveop_LoadMetagameDone": [
+      "bSuccess"
+    ],
+    "ifs_saveop_SaveMetagameDone": [
+      "bSuccess"
+    ],
+    "ifs_saveop_MetaOverwritePromptDone": [
+      "bResult"
+    ],
+    "ifs_saveop_DeleteMetagameDone": [
+      "bSuccess"
+    ],
+    "gPopup_LobbyOpts_fnActivate": [
+      "this",
+      "vis"
+    ],
+    "gPopup_LobbyOpts_fnInput_Accept": [
+      "this"
+    ],
+    "Popup_LobbyOpts_fnUpdate": [
+      "this",
+      "fDt"
+    ],
+    "Popup_LobbyOpts_fnBuildPopup": [
+      "this"
+    ],
+    "gPopup_LoadSave2_fnActivate": [
+      "this",
+      "vis"
+    ],
+    "Popup_LoadSave2_SelectButton": [
+      "fBtn"
+    ],
+    "gPopup_LoadSave2_fnInput_Accept": [
+      "this",
+      "iJoystick"
+    ],
+    "gPopup_LoadSave2_fnInput_Back": [
+      "this"
+    ],
+    "gPopup_LoadSave2_fnInput_GeneralUp": [
+      "this",
+      "iJoystick"
+    ],
+    "gPopup_LoadSave2_fnInput_GeneralDown": [
+      "this",
+      "iJoystick"
+    ]
+  },
+  "returns": {
+    "ScriptCB_GetError": [
+      "ErrorLevel",
+      "ErrorMessage"
+    ],
+    "ScriptCB_GetScreenInfo": [
+      "fw",
+      "fh"
+    ],
+    "ScriptCB_GetCurrentAspect": [
+      "ca"
+    ],
+    "ScriptCB_GetTargetAspect": [
+      "ta"
+    ],
+    "ScriptCB_GetLatestError": [
+      "ErrorLevel",
+      "ErrorMessage"
+    ],
+    "ScriptCB_GetFriendListIcon": [
+      "IconIdx"
+    ],
+    "ScriptCB_IFText_GetDisplayRect": [
+      "fLeft",
+      "fTop",
+      "fRight",
+      "fTop",
+      "fRight",
+      "fBot"
+    ],
+    "createObj": [
+      "temp"
+    ],
+    "getn": [
+      "Count"
+    ],
+    "gShellScreen_fnDefaultCheckGamepad": [
+      "this"
+    ],
+    "ScriptCB_tounicode": [
+      "i"
+    ],
+    "ScriptCB_GetSafeScreenInfo": [
+      "w",
+      "h"
+    ],
+    "random": [
+      "omega"
+    ],
+    "ScriptCB_GetLobbyPlayerFlags": [
+      "muted",
+      "friend",
+      "bCanBoot"
+    ],
+    "ScriptCB_GetJoySensitivity": [
+      "joysense",
+      "joysenseStep",
+      "joysenseMax"
+    ],
+    "ScriptCB_IsRumbleOn": [
+      "rumbleOn"
+    ],
+    "ScriptCB_GetControlMode": [
+      "contmode"
+    ],
+    "ScriptCB_GetFriendlyFire": [
+      "ff"
+    ],
+    "ScriptCB_GetMouseSensitivity": [
+      "mouseSens",
+      "mouseSensStep",
+      "mouseSensMax"
+    ],
+    "ScriptCB_GetYAxisFlip": [
+      "flip"
+    ],
+    "ScriptCB_IsLastInputFromJoystick": [
+      "that"
+    ],
+    "ScriptCB_FillResolutionTable": [
+      "index"
+    ],
+    "ScriptCB_FillMultisampleTable": [
+      "index"
+    ],
+    "ScriptCB_GetVolumes": [
+      "VolMusic",
+      "VolSfx",
+      "VolVoice",
+      "MaxVol",
+      "VolMaster"
+    ],
+    "ScriptCB_GetShellActive": [
+      "shellActive"
+    ],
+    "ScriptCB_GetEAXVersion": [
+      "EAXversion"
+    ],
+    "ScriptCB_GetMixConfig": [
+      "mixConfig"
+    ],
+    "ScriptCB_GetOutputMode": [
+      "OutputMode"
+    ],
+    "ScriptCB_HWSupport": [
+      "hweffects",
+      "hwmixing"
+    ],
+    "ScriptCB_EffectsEnabled": [
+      "effects"
+    ],
+    "floor": [
+      "half"
+    ],
+    "ifs_opt_sound_getBarSize": [
+      "BarW"
+    ],
+    "ScriptCB_GetTeamstats": [
+      "playerIdxL"
+    ],
+    "max": [
+      "num"
+    ],
+    "ScriptCB_IFObj_MouseOver": [
+      "bHit"
+    ],
+    "ScriptCB_GetStringWidth": [
+      "d"
+    ],
+    "IFObj_fnGetPos": [
+      "pos1",
+      "pos2"
+    ],
+    "ScriptCB_usprintf": [
+      "ShowUStr"
+    ],
+    "ScriptCB_GetFontHeight": [
+      "height"
+    ],
+    "strrep": [
+      "ShowStr"
+    ],
+    "ScriptCB_IFText_GetTextExtent": [
+      "CurPixelLen"
+    ],
+    "strlen": [
+      "Len"
+    ],
+    "NewButtonWindow": [
+      "temp"
+    ],
+    "min": [
+      "ClickPos"
+    ],
+    "ScriptCB_GetFriendActions": [
+      "tButtonlist"
+    ],
+    "ShowHideVerticalButtons": [
+      "NewButton"
+    ],
+    "format": [
+      "tag"
+    ]
+  }
+}

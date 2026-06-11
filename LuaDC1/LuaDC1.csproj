@@ -2,7 +2,17 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>LuaDC1</RootNamespace>
+    <AssemblyName>LuaDC1</AssemblyName>
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Naming dictionary mined from the original BF1 scripts via the mine command. -->
+    <EmbeddedResource Include="names\bf1-names.json" />
+  </ItemGroup>
 
 </Project>
