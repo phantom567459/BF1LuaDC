@@ -10,18 +10,28 @@ namespace LuaDC1.Gui;
 /// <summary>
 /// A small Windows GUI for the decompiler, modeled on BAD-AL's special_unluac: open a .lvl (or a
 /// single .script), pick a script from the list, and view it decompiled / as a luac-style listing /
-/// as a summary, with a round-trip verification overview. Naming and verification are toggles.
+/// as a summary, with Lua syntax highlighting and a round-trip verification overview. A second
+/// compiled source can be loaded to diff the decompiled output side-by-side.
 /// </summary>
 public sealed class MainForm : Form
 {
+    private static readonly Color DiffLeftColor = Color.FromArgb(255, 230, 230);   // lines only on the left
+    private static readonly Color DiffRightColor = Color.FromArgb(228, 245, 230);  // lines only on the right
+
     private readonly ListView _list = new();
-    private readonly TextBox _text = new();
+    private readonly RichTextBox _text = new();
+    private readonly RichTextBox _compareText = new();
+    private readonly SplitContainer _outputSplit = new();
+    private readonly Label _leftHeader = new();
+    private readonly Label _rightHeader = new();
     private readonly ComboBox _mode = new();
     private readonly CheckBox _verify = new();
     private readonly CheckBox _names = new();
     private readonly ToolStripStatusLabel _status = new();
 
     private readonly List<UcfbExtractor.Script> _scripts = new();
+    private List<UcfbExtractor.Script>? _compareScripts;
+    private string _compareName = "";
     private readonly NameDictionary _dict = NameDictionary.LoadDefault();
     private readonly Verifier _verifier = new(null);
     private string _sourceName = "";
@@ -39,8 +49,8 @@ public sealed class MainForm : Form
     public MainForm()
     {
         Text = "LuaDC1 — Star Wars Battlefront Lua 4.0 Decompiler";
-        Width = 1100;
-        Height = 720;
+        Width = 1200;
+        Height = 760;
         StartPosition = FormStartPosition.CenterScreen;
 
         var split = new SplitContainer { Dock = DockStyle.Fill, SplitterDistance = 280 };
@@ -55,14 +65,13 @@ public sealed class MainForm : Form
         _list.SelectedIndexChanged += (_, _) => RenderSelected();
         split.Panel1.Controls.Add(_list);
 
-        _text.Multiline = true;
-        _text.ReadOnly = true;
-        _text.ScrollBars = ScrollBars.Both;
-        _text.WordWrap = false;
-        _text.Dock = DockStyle.Fill;
-        _text.Font = new Font("Consolas", 9.5f);
-        _text.BackColor = Color.White;
-        split.Panel2.Controls.Add(_text);
+        // Right side: two stacked panes (current | comparison); comparison hidden until used.
+        _outputSplit.Dock = DockStyle.Fill;
+        _outputSplit.Orientation = Orientation.Vertical;
+        _outputSplit.Panel2Collapsed = true;
+        _outputSplit.Panel1.Controls.Add(BuildPane(_text, _leftHeader, "Decompiled"));
+        _outputSplit.Panel2.Controls.Add(BuildPane(_compareText, _rightHeader, "Comparison"));
+        split.Panel2.Controls.Add(_outputSplit);
 
         var tool = new ToolStrip { GripStyle = ToolStripGripStyle.Hidden };
         _mode.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -76,18 +85,24 @@ public sealed class MainForm : Form
         _names.Text = "Names";
         _names.Checked = true;
         _names.CheckedChanged += (_, _) => RenderSelected();
-        var verifyAll = new ToolStripButton("Verify All") { Alignment = ToolStripItemAlignment.Right };
+        var verifyAll = new ToolStripButton("Verify All");
         verifyAll.Click += async (_, _) => await VerifyAllAsync();
+        var compare = new ToolStripButton("Compare…") { Alignment = ToolStripItemAlignment.Right };
+        compare.Click += (_, _) => CompareWith();
         tool.Items.Add(new ToolStripLabel("View:"));
         tool.Items.Add(new ToolStripControlHost(_mode));
         tool.Items.Add(new ToolStripControlHost(_verify));
         tool.Items.Add(new ToolStripControlHost(_names));
         tool.Items.Add(verifyAll);
+        tool.Items.Add(compare);
 
         var menu = new MenuStrip();
         var file = new ToolStripMenuItem("&File");
-        file.DropDownItems.Add("Open &.lvl…", null, (_, _) => Open("Battlefront level (*.lvl)|*.lvl|All files (*.*)|*.*"));
-        file.DropDownItems.Add("Open &script…", null, (_, _) => Open("Compiled script (*.script;*.luac)|*.script;*.luac|All files (*.*)|*.*"));
+        file.DropDownItems.Add("Open &.lvl…", null, (_, _) => Open("Battlefront level (*.lvl)|*.lvl|All files (*.*)|*.*", false));
+        file.DropDownItems.Add("Open &script…", null, (_, _) => Open("Compiled script (*.script;*.luac)|*.script;*.luac|All files (*.*)|*.*", false));
+        file.DropDownItems.Add(new ToolStripSeparator());
+        file.DropDownItems.Add("&Compare with .lvl/.script…", null, (_, _) => CompareWith());
+        file.DropDownItems.Add("Close c&omparison", null, (_, _) => CloseComparison());
         file.DropDownItems.Add(new ToolStripSeparator());
         file.DropDownItems.Add("&Save current .lua…", null, (_, _) => SaveCurrent());
         file.DropDownItems.Add(new ToolStripSeparator());
@@ -100,7 +115,6 @@ public sealed class MainForm : Form
         _status.TextAlign = ContentAlignment.MiddleLeft;
         statusStrip.Items.Add(_status);
 
-        // Docked controls fill from the outside in, in reverse add order; add Fill first, menu last.
         Controls.Add(split);
         Controls.Add(statusStrip);
         Controls.Add(tool);
@@ -108,9 +122,31 @@ public sealed class MainForm : Form
         MainMenuStrip = menu;
     }
 
+    private static Control BuildPane(RichTextBox rtb, Label header, string title)
+    {
+        var host = new Panel { Dock = DockStyle.Fill };
+        rtb.Multiline = true;
+        rtb.ReadOnly = true;
+        rtb.WordWrap = false;
+        rtb.ScrollBars = RichTextBoxScrollBars.Both;
+        rtb.Dock = DockStyle.Fill;
+        rtb.Font = new Font("Consolas", 9.5f);
+        rtb.BackColor = Color.White;
+        rtb.DetectUrls = false;
+        header.Text = title;
+        header.Dock = DockStyle.Top;
+        header.Height = 20;
+        header.TextAlign = ContentAlignment.MiddleLeft;
+        header.BackColor = SystemColors.ControlLight;
+        header.Padding = new Padding(4, 0, 0, 0);
+        host.Controls.Add(rtb);
+        host.Controls.Add(header);
+        return host;
+    }
+
     // ---- loading -----------------------------------------------------------
 
-    private void Open(string filter)
+    private void Open(string filter, bool _)
     {
         using var dlg = new OpenFileDialog { Filter = filter };
         if (dlg.ShowDialog(this) == DialogResult.OK) LoadPath(dlg.FileName);
@@ -121,19 +157,11 @@ public sealed class MainForm : Form
         _scripts.Clear();
         _list.Items.Clear();
         _text.Clear();
+        CloseComparison();
         _sourceName = Path.GetFileName(path);
         try
         {
-            byte[] bytes = File.ReadAllBytes(path);
-            if (path.EndsWith(".lvl", StringComparison.OrdinalIgnoreCase))
-            {
-                _scripts.AddRange(UcfbExtractor.EnumerateScripts(bytes));
-            }
-            else
-            {
-                var ex = UcfbExtractor.Extract(bytes);
-                _scripts.Add(new UcfbExtractor.Script(ex.ScriptName ?? Path.GetFileNameWithoutExtension(path), ex.Bytecode));
-            }
+            _scripts.AddRange(LoadScripts(path));
         }
         catch (Exception ex)
         {
@@ -144,9 +172,57 @@ public sealed class MainForm : Form
         foreach (var s in _scripts)
             _list.Items.Add(new ListViewItem(new[] { s.Name, "" }));
 
+        _leftHeader.Text = _sourceName;
         _status.Text = $"{_sourceName} — {_scripts.Count} script(s)";
         if (_list.Items.Count > 0) _list.Items[0].Selected = true;
         _list.Focus();
+    }
+
+    private static List<UcfbExtractor.Script> LoadScripts(string path)
+    {
+        byte[] bytes = File.ReadAllBytes(path);
+        if (path.EndsWith(".lvl", StringComparison.OrdinalIgnoreCase))
+            return UcfbExtractor.EnumerateScripts(bytes);
+        var ex = UcfbExtractor.Extract(bytes);
+        return new List<UcfbExtractor.Script> { new(ex.ScriptName ?? Path.GetFileNameWithoutExtension(path), ex.Bytecode) };
+    }
+
+    // ---- comparison --------------------------------------------------------
+
+    private void CompareWith()
+    {
+        if (_scripts.Count == 0) { _status.Text = "Open a .lvl/.script first, then choose something to compare against."; return; }
+        using var dlg = new OpenFileDialog { Filter = "Compiled (*.lvl;*.script;*.luac)|*.lvl;*.script;*.luac|All files (*.*)|*.*" };
+        if (dlg.ShowDialog(this) != DialogResult.OK) return;
+        try
+        {
+            _compareScripts = LoadScripts(dlg.FileName);
+            _compareName = Path.GetFileName(dlg.FileName);
+            _rightHeader.Text = _compareName;
+            _outputSplit.Panel2Collapsed = false;
+            RenderSelected();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, ex.Message, "Could not open comparison", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void CloseComparison()
+    {
+        _compareScripts = null;
+        _compareName = "";
+        _compareText.Clear();
+        _outputSplit.Panel2Collapsed = true;
+        if (_scripts.Count > 0) RenderSelected();
+    }
+
+    private UcfbExtractor.Script? FindMatch(UcfbExtractor.Script current)
+    {
+        if (_compareScripts == null) return null;
+        if (_compareScripts.Count == 1) return _compareScripts[0];
+        foreach (var s in _compareScripts) if (s.Name == current.Name) return s;
+        return null;
     }
 
     // ---- rendering ---------------------------------------------------------
@@ -155,53 +231,62 @@ public sealed class MainForm : Form
     {
         if (_list.SelectedIndices.Count == 0) return;
         int idx = _list.SelectedIndices[0];
-        var script = _scripts[idx];
+        var current = _scripts[idx];
+        string mode = _mode.SelectedItem as string ?? "Decompiled Lua";
+        string textA = RenderText(current, mode);
 
-        Prototype main;
-        try
+        if (_compareScripts != null)
         {
-            main = BytecodeReader.Read(script.Bytecode);
-        }
-        catch (Exception ex)
-        {
-            _text.Text = $"-- could not read bytecode: {ex.Message}";
-            SetRowStatus(idx, "read error");
+            var match = FindMatch(current);
+            if (match == null)
+            {
+                LuaHighlighter.Apply(_text, textA);
+                _compareText.Clear();
+                _compareText.Text = $"(no script named \"{current.Name}\" in {_compareName})";
+                _status.Text = $"{current.Name}: no matching script in {_compareName}";
+                return;
+            }
+            string textB = RenderText(match.Value, mode);
+            var (leftDiff, rightDiff) = TextDiff.DiffLines(textA.Split('\n'), textB.Split('\n'));
+            LuaHighlighter.Apply(_text, textA, leftDiff, DiffLeftColor);
+            LuaHighlighter.Apply(_compareText, textB, rightDiff, DiffRightColor);
+            int n = TextDiff.Count(leftDiff) + TextDiff.Count(rightDiff);
+            _status.Text = n == 0
+                ? $"{current.Name}: identical to {_compareName}"
+                : $"{current.Name}: {n} differing line(s) vs {_compareName}";
             return;
         }
 
-        string mode = _mode.SelectedItem as string ?? "Decompiled Lua";
-        switch (mode)
+        LuaHighlighter.Apply(_text, textA);
+        if (_verify.Checked && mode == "Decompiled Lua")
         {
-            case "Listing (luac -l)":
-                _text.Text = Normalize(Disassembler.RenderListing(main));
-                break;
-            case "Summary":
-                _text.Text = Normalize(BuildSummary(script, main));
-                break;
-            default:
-                RenderDecompiled(idx, script, main);
-                break;
-        }
-        _text.SelectionStart = 0;
-        _text.ScrollToCaret();
-    }
-
-    private void RenderDecompiled(int idx, UcfbExtractor.Script script, Prototype main)
-    {
-        string lua = LuaEmitter.Emit(main, _names.Checked ? _dict : null);
-        string header = "";
-        if (_verify.Checked)
-        {
-            var result = VerifyScript(script, lua);
+            var result = VerifyScript(current, textA);
             SetRowStatus(idx, ShortStatus(result));
-            _status.Text = $"{_sourceName} — {script.Name}: {result}";
-            header = $"-- {script.Name}: {result}\n\n";
+            _status.Text = $"{_sourceName} — {current.Name}: {result}";
         }
         else
         {
-            _status.Text = $"{_sourceName} — {script.Name}";
+            _status.Text = $"{_sourceName} — {current.Name}";
         }
-        _text.Text = Normalize(header + lua);
+    }
+
+    private string RenderText(UcfbExtractor.Script script, string mode)
+    {
+        try
+        {
+            var main = BytecodeReader.Read(script.Bytecode);
+            string text = mode switch
+            {
+                "Listing (luac -l)" => Disassembler.RenderListing(main),
+                "Summary" => BuildSummary(script, main),
+                _ => LuaEmitter.Emit(main, _names.Checked ? _dict : null),
+            };
+            return text.Replace("\r\n", "\n").Replace('\r', '\n');
+        }
+        catch (Exception ex)
+        {
+            return $"-- could not decompile {script.Name}: {ex.Message}";
+        }
     }
 
     private Verifier.Result VerifyScript(UcfbExtractor.Script script, string lua)
@@ -210,8 +295,7 @@ public sealed class MainForm : Form
         try
         {
             File.WriteAllText(tmp, lua);
-            var main = BytecodeReader.Read(script.Bytecode);
-            return _verifier.Verify(tmp, main);
+            return _verifier.Verify(tmp, BytecodeReader.Read(script.Bytecode));
         }
         finally
         {
@@ -246,7 +330,6 @@ public sealed class MainForm : Form
         Cursor = Cursors.WaitCursor;
         var dict = _names.Checked ? _dict : null;
         var snapshot = _scripts.ToArray();
-
         for (int i = 0; i < snapshot.Length; i++)
         {
             var script = snapshot[i];
@@ -255,8 +338,7 @@ public sealed class MainForm : Form
                 try
                 {
                     var main = BytecodeReader.Read(script.Bytecode);
-                    string lua = LuaEmitter.Emit(main, dict);
-                    return ShortStatus(VerifyScript(script, lua));
+                    return ShortStatus(VerifyScript(script, LuaEmitter.Emit(main, dict)));
                 }
                 catch { return "error"; }
             });
@@ -301,7 +383,4 @@ public sealed class MainForm : Form
         foreach (char c in Path.GetInvalidFileNameChars()) name = name.Replace(c, '_');
         return name;
     }
-
-    // TextBox wants CRLF for line breaks; the emitter uses LF.
-    private static string Normalize(string s) => s.Replace("\r\n", "\n").Replace("\n", "\r\n");
 }

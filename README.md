@@ -47,11 +47,17 @@ automatically), or already-massaged raw Lua 4.0 bytecode.
 ## GUI
 
 `LuaDC1 --ui` opens a Windows desktop front end (modeled on BAD-AL's `special_unluac`): **File →
-Open .lvl** lists every script in the level on the left; selecting one decompiles it on the right.
-A **View** dropdown switches between *Decompiled Lua*, *Listing* (luac-style), and *Summary*, the
-**Verify** toggle adds a round-trip overview (per-script status in the list, full result atop the
-text), **Names** toggles heuristic naming, and **Verify All** fills the round-trip column for the
-whole level. *Save current .lua* writes the displayed source.
+Open .lvl** lists every script in the level on the left; selecting one decompiles it on the right
+with **Lua syntax highlighting**. A **View** dropdown switches between *Decompiled Lua*, *Listing*
+(luac-style), and *Summary*, the **Verify** toggle adds a round-trip overview (per-script status in
+the list, full result in the status bar), **Names** toggles heuristic naming, and **Verify All**
+fills the round-trip column for the whole level. *Save current .lua* writes the displayed source.
+
+**Compare…** (toolbar or **File → Compare with .lvl/.script…**) loads a second compiled source and
+shows it beside the current one in a split view: the same-named script is decompiled from both and
+the lines that differ are tinted (pink on the left, green on the right), with a count in the status
+bar — handy for diffing two builds of a level or checking a decompile against a known-good `.script`.
+*Close comparison* returns to the single-pane view.
 
 ## What it handles
 
