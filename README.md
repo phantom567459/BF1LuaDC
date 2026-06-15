@@ -10,9 +10,11 @@ with the bundled Lua 4.0.1 `luac` and comparing the opcode streams.
 ## Usage
 
 ```
-LuaDC1 <input> [options]      <input> = a .script/.luac file OR a folder (batch)
+LuaDC1 --ui [file]            launch the GUI (optionally pre-loading a .lvl/.script)
+LuaDC1 <input> [options]      <input> = a .lvl, a .script/.luac file, OR a folder (batch)
 
-  --out <path>        output file (single) or directory (batch)
+  --out <path>        output file (single) or directory (batch/.lvl)
+  --list              just list the scripts contained in a .lvl
   --batch             force folder mode (auto when <input> is a directory)
   --pattern <glob>    batch filter (default *.script)
   --verify            recompile output with bundled luac and report round-trip accuracy
@@ -30,14 +32,26 @@ LuaDC1 <input> [options]      <input> = a .script/.luac file OR a folder (batch)
 ### Examples
 
 ```
+LuaDC1 --ui                          # open the GUI
+LuaDC1 shell.lvl --list              # list the scripts inside a .lvl
+LuaDC1 shell.lvl --verify            # decompile every script -> shell_scripts\
 LuaDC1 dpk02a.script                 # auto-strip UCFB + decompile -> dpk02a.lua
 LuaDC1 dpk02a.script --verify        # decompile and confirm it round-trips
 LuaDC1 .\scripts --verify            # batch a folder -> scripts\decompiled\
 ```
 
-The input may be the raw extracted `.script` chunk (UCFB header and trailing padding are detected
-and stripped automatically) or an already-massaged raw Lua 4.0 bytecode file — both work. Pulling
-the `.script` chunk out of a `.lvl` is still a manual step.
+`<input>` can be a whole `.lvl` (every contained script is extracted and decompiled), a single
+extracted `.script` chunk (the UCFB header and trailing padding are detected and stripped
+automatically), or already-massaged raw Lua 4.0 bytecode.
+
+## GUI
+
+`LuaDC1 --ui` opens a Windows desktop front end (modeled on BAD-AL's `special_unluac`): **File →
+Open .lvl** lists every script in the level on the left; selecting one decompiles it on the right.
+A **View** dropdown switches between *Decompiled Lua*, *Listing* (luac-style), and *Summary*, the
+**Verify** toggle adds a round-trip overview (per-script status in the list, full result atop the
+text), **Names** toggles heuristic naming, and **Verify All** fills the round-trip column for the
+whole level. *Save current .lua* writes the displayed source.
 
 ## What it handles
 

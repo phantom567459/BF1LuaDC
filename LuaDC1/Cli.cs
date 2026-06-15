@@ -25,6 +25,7 @@ public static class Cli
         public bool Names = true;       // heuristic variable naming on by default
         public string? NamesFile;
         public string? MineDir;
+        public bool List;               // just list the scripts in a .lvl
     }
 
     public static int Run(string[] args)
@@ -53,6 +54,7 @@ public static class Cli
                 case "--names": o.Names = NextArg(args, ref i, a) is not ("off" or "none" or "false"); break;
                 case "--names-file": o.NamesFile = NextArg(args, ref i, a); break;
                 case "--mine": o.MineDir = NextArg(args, ref i, a); break;
+                case "--list": o.List = true; break;
                 default:
                     if (a.StartsWith('-')) { Console.Error.WriteLine($"Unknown option: {a}"); return 2; }
                     o.Input ??= a;
@@ -67,11 +69,61 @@ public static class Cli
 
         var dict = o.Names ? (o.NamesFile != null ? NameDictionary.LoadFrom(o.NamesFile) : NameDictionary.LoadDefault()) : null;
 
+        if (o.Input.EndsWith(".lvl", StringComparison.OrdinalIgnoreCase) && File.Exists(o.Input))
+            return RunLvl(o, dict);
+
         if (o.Batch || Directory.Exists(o.Input))
             return RunBatch(o, dict);
 
         if (!File.Exists(o.Input)) { Console.Error.WriteLine($"Input not found: {o.Input}"); return 2; }
         return RunSingle(o, o.Input, o.Out, dict) ? 0 : 1;
+    }
+
+    // ---- .lvl bundle -------------------------------------------------------
+
+    private static int RunLvl(Options o, NameDictionary? dict)
+    {
+        var scripts = UcfbExtractor.EnumerateScripts(File.ReadAllBytes(o.Input!));
+        if (scripts.Count == 0) { Console.Error.WriteLine($"No Lua scripts found in {o.Input}"); return 1; }
+
+        if (o.List)
+        {
+            Console.WriteLine($"{scripts.Count} script(s) in {Path.GetFileName(o.Input)}:");
+            foreach (var s in scripts) Console.WriteLine($"  {s.Name,-32} {s.Bytecode.Length} bytes");
+            return 0;
+        }
+
+        string outDir = o.Out ?? Path.Combine(
+            Path.GetDirectoryName(Path.GetFullPath(o.Input!)) ?? ".",
+            Path.GetFileNameWithoutExtension(o.Input) + "_scripts");
+        Directory.CreateDirectory(outDir);
+        Console.Error.WriteLine($"Decompiling {scripts.Count} script(s) from {Path.GetFileName(o.Input)} -> {outDir}");
+
+        var verifier = o.Verify ? new Verifier(o.Luac) : null;
+        int ok = 0, failed = 0;
+        foreach (var s in scripts)
+        {
+            string dest = Path.Combine(outDir, MakeFileName(s.Name) + ".lua");
+            string status;
+            try
+            {
+                var main = BytecodeReader.Read(s.Bytecode);
+                File.WriteAllText(dest, LuaEmitter.Emit(main, dict));
+                status = verifier != null ? verifier.Verify(dest, main).ToString() : "decompiled";
+                ok++;
+            }
+            catch (Exception ex) { status = $"ERROR: {ex.Message}"; failed++; }
+            Console.WriteLine($"  {s.Name,-32} {status}");
+        }
+        Console.Error.WriteLine($"Done: {ok} ok, {failed} failed.");
+        return failed == 0 ? 0 : 1;
+    }
+
+    private static string MakeFileName(string name)
+    {
+        if (string.IsNullOrEmpty(name)) return "script";
+        foreach (char c in Path.GetInvalidFileNameChars()) name = name.Replace(c, '_');
+        return name;
     }
 
     // ---- single file -------------------------------------------------------

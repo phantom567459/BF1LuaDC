@@ -44,6 +44,51 @@ public static class UcfbExtractor
             "Input is neither raw Lua 4.0 bytecode (1B 4C 75 61) nor a recognizable UCFB script chunk.");
     }
 
+    /// <summary>One Lua script found inside a .lvl: its NAME and raw bytecode (the BODY payload).</summary>
+    public readonly record struct Script(string Name, byte[] Bytecode);
+
+    /// <summary>
+    /// Enumerate every Lua script in a .lvl (or any UCFB container): walk the chunk tree and, for
+    /// each <c>scr_</c> chunk, return its NAME and BODY bytecode. Descends into <c>ucfb</c> and
+    /// <c>lvl_</c> sub-bundles so scripts at any nesting depth are found.
+    /// </summary>
+    public static List<Script> EnumerateScripts(byte[] file)
+    {
+        var results = new List<Script>();
+        WalkScripts(file.AsSpan(), results);
+        return results;
+    }
+
+    private static void WalkScripts(ReadOnlySpan<byte> region, List<Script> results)
+    {
+        int offset = 0;
+        while (offset + 8 <= region.Length)
+        {
+            string tag = Encoding.ASCII.GetString(region.Slice(offset, 4));
+            uint size = BinaryPrimitives.ReadUInt32LittleEndian(region.Slice(offset + 4, 4));
+            int payloadStart = offset + 8;
+            if (size > (uint)(region.Length - payloadStart)) break;
+            var payload = region.Slice(payloadStart, (int)size);
+
+            switch (tag)
+            {
+                case "scr_":
+                    if (TryFindBody(payload, out var body, out var name))
+                        results.Add(new Script(name ?? "", body.ToArray()));
+                    break;
+                case "ucfb":
+                    WalkScripts(payload, results);
+                    break;
+                case "lvl_":
+                    // lvl_ payload begins with a 4-byte name hash, then child chunks.
+                    WalkScripts(payload.Length >= 4 ? payload[4..] : payload, results);
+                    break;
+            }
+
+            offset = payloadStart + Align4((int)size);
+        }
+    }
+
     private static bool StartsWithTag(ReadOnlySpan<byte> span, string tag) =>
         span.Length >= 4 && span[0] == tag[0] && span[1] == tag[1] && span[2] == tag[2] && span[3] == tag[3];
 
